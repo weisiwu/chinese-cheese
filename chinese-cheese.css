@@ -85,6 +85,7 @@
 }
 .chessman {
     position: absolute;
+    z-index: 10;
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -94,6 +95,10 @@
     font-family: cheese;
     font-size: 38px;
     outline-offset: 5px;
+    cursor: pointer;
+    background-color: #e0be88;
+    box-shadow: 3px 2px 1px 0px #999;
+    user-select: none;
 }
 .chessman::after {
     position: absolute;
@@ -122,4 +127,30 @@
 }
 .chessman[group=red]::after {
     border: 1px solid red;
+}
+.pointer-black {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    left: 0px;
+    top: 0px;
+}
+.pointer-rt {
+    top: 0px;
+    right: 0px;
+    left: unset;
+    bottom: unset;
+}
+.pointer-red {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    bottom: 0px;
+    left: 0px;    
+}
+.pointer-rb {
+    bottom: 0px;
+    right: 0px;
+    left: unset;
+    top: unset;
 }
