@@ -135,18 +135,30 @@
     left: 0px;
     top: 0px;
 }
+.pointer-red {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    bottom: 0px;
+    left: 0px;
+}
 .pointer-rt {
     top: 0px;
     right: 0px;
     left: unset;
     bottom: unset;
 }
-.pointer-red {
-    position: absolute;
-    width: 1px;
-    height: 1px;
+.pointer-lt {
+    top: 0px;
+    left: 0px;
+    right: unset;
+    bottom: unset;
+}
+.pointer-lb {
     bottom: 0px;
-    left: 0px;    
+    left: 0px;
+    right: unset;
+    top: unset;
 }
 .pointer-rb {
     bottom: 0px;
