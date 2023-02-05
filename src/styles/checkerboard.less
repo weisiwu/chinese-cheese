@@ -1,7 +1,12 @@
+@font-face {
+    font-family: cheese;
+    src: url(../fonts/cheese.ttf);
+}
 #CheckerboardWrapper {
     width: 900px;
     height: 1000px;
     margin: 0px;
+    margin: 0 auto;
     background-color: #e0be88;
     overflow: hidden;
     box-shadow: 5px 2px 5px #999;
@@ -24,10 +29,18 @@
     border-left: 1px solid #000;
 }
 .divider {
+    position: relative;
+    display: grid;
     grid-column-start: 1;
     grid-column-end: 9;
+    grid-template-columns: repeat(8, 100px);
+    grid-template-rows: repeat(1, 100px);
     border-top: 1px solid #000;
     border-left: 1px solid #000;
+}
+.hide-border {
+    border-top: none;
+    border-left: none;
 }
 .slant {
     background: linear-gradient(45deg, transparent 49.5%, black 49.5%, black 50.5%, transparent 50.5%);
@@ -83,6 +96,10 @@
     position: absolute;
     width: 1px;
     height: 1px;
+    // width: 10px;
+    // height: 10px;
+    // background-color: black;
+    // border-radius: 50%;
     left: 0px;
     top: 0px;
 }
@@ -90,30 +107,64 @@
     position: absolute;
     width: 1px;
     height: 1px;
+    // width: 10px;
+    // height: 10px;
+    // background-color: red;
+    // border-radius: 50%;
     bottom: 0px;
     left: 0px;
 }
-.pointer-rt {
-    top: 0px;
+.pointer-black.last {
     right: 0px;
-    left: unset;
-    bottom: unset;
+    left: 99px;
 }
-.pointer-lt {
-    top: 0px;
-    left: 0px;
-    right: unset;
-    bottom: unset;
-}
-.pointer-lb {
-    bottom: 0px;
-    left: 0px;
-    right: unset;
-    top: unset;
-}
-.pointer-rb {
-    bottom: 0px;
+.pointer-red.last {
     right: 0px;
-    left: unset;
-    top: unset;
+    left: 99px;
+}
+.pointer-bottom {
+    top: 0px;
+    bottom: 99px;
+}
+.pointer-top {
+    bottom: 0px;
+    top: 99px;
+}
+.banner-left {
+    position: absolute;
+    left: 0;
+    font-family: cheese;
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 100px;
+    height: 100px;
+    width: 50%;
+    text-align: center;
+    p {
+        display: inline-block;
+        margin: 0;
+        width: 50px;
+        word-break: break-all;
+        transform: rotate(90deg);
+        transform-origin: 75px;
+    }
+}
+.banner-right {
+    position: absolute;
+    left: 50%;
+    font-family: cheese;
+    font-size: 50px;
+    font-weight: bold;
+    line-height: 100px;
+    height: 100px;
+    width: 50%;
+    text-align: center;
+    p {
+        display: inline-block;
+        margin: 0;
+        width: 50px;
+        word-break: break-all;
+        transform: rotate(270deg);
+        transform-origin: -20px;
+    }
 }

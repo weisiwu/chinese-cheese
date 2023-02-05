@@ -1,151 +1,122 @@
+/**
+ * 棋盘
+*/
 import React from 'react';
 import Chessman from './chessman.jsx';
-import {CheckBoardPoints} from '../utils/constants.js';
+import { CheckBoardPoints } from '../utils/constants.js';
 import '../styles/checkerboard.less';
 
+// 棋盘关键纹理位置(行_列)
+const slant = ['1_4', '2_5', '8_4', '9_5'];
+const slantBack = ['1_5', '2_4', '8_5', '9_4'];
+const anchorRb = ['2_1', '2_7', '7_1', '7_7'];
+const anchorRt = ['3_1', '3_7', '8_1', '8_7'];
+const anchorLt = ['3_2', '3_8', '8_2', '8_8'];
+const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
+
+// Step1 棋盘渲染
+// 1、 改造棋盘，在对应节点上留下钩子，方便后续棋子渲染定位
+// 2、 画出楚河汉界
+// 3、 在页面上画一个棋子
+// 4、 棋盘不重复刷新，渲染后，留出钩子，每次移动棋子，都通过renderPortal的方式去渲染棋子们的新位置
+// Step2 棋子整体渲染
+// Step3 棋子移动
+// Step4 添加棋子移动规则
 class Checkerboard extends React.Component {
+
+    /**
+     * 渲染格子
+     * @param {Number} row 多少行
+     * @param {Number} col 多少列
+     * @param {Boolean} isDivider 是否为楚河汉界那行
+     * @returns xml
+     */
+    _renderGrid = (row, col, isDivider = false) => {
+        const id = `${row}_${col}`;
+        // slant 和 point 都是纹理，命中条件((行+列))，即渲染
+        const baseCls = row <= 5 ? 'pointer-black' : 'pointer-red';
+        const isLast = col === 8;
+        let extCls = '';
+        let gridCls = '';
+        if (slant.includes(id)) { extCls += ' slant'; }
+        if (slantBack.includes(id)) { extCls += ' slant-back'; }
+        if (anchorRb.includes(id)) { extCls += ' anchor-rb'; }
+        if (anchorRt.includes(id)) { extCls += ' anchor-rt'; }
+        if (anchorLt.includes(id)) { extCls += ' anchor-lt'; }
+        if (anchorLb.includes(id)) { extCls += ' anchor-lb'; }
+        if (isDivider) { extCls += ' hide-border'; }
+
+        if (row === 5) {
+            return (
+                <div key={id} className={`grid ${extCls}`}>
+                    {/* 黑棋边界 */}
+                    <div className={`${baseCls} pointer-bottom`} row={row} col={col} id={id}></div>
+                    {
+                        isLast ?
+                            <div className={`${baseCls} pointer-bottom last`} row={row} col={col} id={id}></div>
+                            : null
+                    }
+                    {/* 红棋边界 */}
+                    <div className="pointer-red pointer-top" row={row} col={col} id={id}></div>
+                    {
+                        isLast ?
+                            <div className="pointer-red pointer-top last" row={row} col={col} id={id}></div>
+                            : null
+                    }
+                </div>
+            );
+        }
+
+        return (
+            <div key={id} className={`grid ${extCls}`}>
+                <div className={`${baseCls}${gridCls}`} row={row} col={col} id={id}></div>
+                {
+                    isLast ?
+                        <div className={`${baseCls} last`} row={row} col={col} id={id}></div>
+                        : null
+                }
+            </div>
+        );
+    }
+
+    /**
+     * 按照行进行渲染
+     * @param {Number} row 多少行
+     * @returns xml
+     */
+    _renderLine = (row) => {
+        if (row === 5) {
+            return (
+                <div className="divider">
+                    { this._renderBanner() }
+                    { Array(8).fill('').map((_, _col) => this._renderGrid(row, _col + 1, true)) }
+                </div>
+            );
+        }
+        return <>
+            { Array(8).fill('').map((_, _col) => this._renderGrid(row, _col + 1)) }
+        </>;
+    }
+
+    _renderBanner = () => {
+        return (
+            <>
+                <div className='banner-left'><p>楚 河</p></div>
+                <div className='banner-right'><p>汉 界</p></div>
+            </>
+        );
+    };
+
     render() {
+
+        // 布局是八横八纵，横向多一个楚河汉界
         return (
             <div id="Checkerboard">
-                <div className="grid"><div className="pointer-black" row="1" col="1"></div></div>
-                <div className="grid"><div className="pointer-black" row="1" col="2"></div></div>
-                <div className="grid"><div className="pointer-black" row="1" col="3"></div></div>
-                <div className="grid slant"><div className="pointer-black" row="1" col="4"></div></div>
-                <div className="grid slant-back"><div className="pointer-black" row="1" col="5"></div></div>
-                <div className="grid"><div className="pointer-black" row="1" col="6"></div></div>
-                <div className="grid"><div className="pointer-black" row="1" col="7"></div></div>
-                <div className="grid">
-                    <div className="pointer-black" row="1" col="8"></div>
-                    <div className="pointer-black pointer-rt" row="1" col="9"></div>
-                </div>
-                <div className="grid anchor-rb"><div className="pointer-black" row="2" col="1"></div></div>
-                <div className="grid anchor-lb"><div className="pointer-black" row="2" col="2"></div></div>
-                <div className="grid"><div className="pointer-black" row="2" col="3"></div></div>
-                <div className="grid slant-back"><div className="pointer-black" row="2" col="4"></div></div>
-                <div className="grid slant"><div className="pointer-black" row="2" col="5"></div></div>
-                <div className="grid"><div className="pointer-black" row="2" col="6"></div></div>
-                <div className="grid anchor-rb"><div className="pointer-black" row="2" col="7"></div></div>
-                <div className="grid anchor-lb">
-                    <div className="pointer-black" row="2" col="8"></div>
-                    <div className="pointer-black pointer-rt" row="2" col="9"></div>
-                </div>
-                <div className="grid anchor-rt"><div className="pointer-black" row="3" col="1"></div></div>
-                <div className="grid anchor-lt"><div className="pointer-black" row="3" col="2"></div></div>
-                <div className="grid"><div className="pointer-black" row="3" col="3"></div></div>
-                <div className="grid"><div className="pointer-black" row="3" col="4"></div></div>
-                <div className="grid"><div className="pointer-black" row="3" col="5"></div></div>
-                <div className="grid"><div className="pointer-black" row="3" col="6"></div></div>
-                <div className="grid anchor-rt"><div className="pointer-black" row="3" col="7"></div></div>
-                <div className="grid anchor-lt">
-                    <div className="pointer-black" row="3" col="8"></div>
-                    <div className="pointer-black pointer-rt" row="3" col="9"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="1"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="1"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="2"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="2"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="3"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="3"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="4"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="4"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="5"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="5"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="6"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="6"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="7"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="7"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-black" row="4" col="8"></div>
-                    <div className="pointer-black pointer-rt" row="4" col="9"></div>
-                    <div className="pointer-black pointer-lb" row="5" col="8"></div>
-                    <div className="pointer-black pointer-rb" row="5" col="9"></div>
-                </div>
-                <div className="divider"></div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="1"></div>
-                    <div className="pointer-red" row="7" col="1"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="2"></div>
-                    <div className="pointer-red" row="7" col="2"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="3"></div>
-                    <div className="pointer-red" row="7" col="3"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="4"></div>
-                    <div className="pointer-red" row="7" col="4"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="5"></div>
-                    <div className="pointer-red" row="7" col="5"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="6"></div>
-                    <div className="pointer-red" row="7" col="6"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="7"></div>
-                    <div className="pointer-red" row="7" col="7"></div>
-                </div>
-                <div className="grid">
-                    <div className="pointer-red pointer-lt" row="6" col="8"></div>
-                    <div className="pointer-red pointer-rt" row="6" col="9"></div>
-                    <div className="pointer-red" row="7" col="8"></div>
-                    <div className="pointer-red pointer-rb" row="7" col="9"></div>
-                </div>
-                <div className="grid anchor-rb"><div className="pointer-red" row="8" col="1"></div></div>
-                <div className="grid anchor-lb"><div className="pointer-red" row="8" col="2"></div></div>
-                <div className="grid"><div className="pointer-red" row="8" col="3"></div></div>
-                <div className="grid"><div className="pointer-red" row="8" col="4"></div></div>
-                <div className="grid"><div className="pointer-red" row="8" col="5"></div></div>
-                <div className="grid"><div className="pointer-red" row="8" col="6"></div></div>
-                <div className="grid anchor-rb"><div className="pointer-red" row="8" col="7"></div></div>
-                <div className="grid anchor-lb">
-                    <div className="pointer-red" row="8" col="8"></div>
-                    <div className="pointer-red pointer-rb" row="8" col="9"></div>
-                </div>
-                <div className="grid anchor-rt"><div className="pointer-red" row="9" col="1"></div></div>
-                <div className="grid anchor-lt"><div className="pointer-red" row="9" col="2"></div></div>
-                <div className="grid"><div className="pointer-red" row="9" col="3"></div></div>
-                <div className="grid slant"><div className="pointer-red" row="9" col="4"></div></div>
-                <div className="grid slant-back"><div className="pointer-red" row="9" col="5"></div></div>
-                <div className="grid"><div className="pointer-red" row="9" col="6"></div></div>
-                <div className="grid anchor-rt"><div className="pointer-red" row="9" col="7"></div></div>
-                <div className="grid anchor-lt">
-                    <div className="pointer-red" row="9" col="8"></div>
-                    <div className="pointer-red pointer-rb" row="9" col="9"></div>
-                </div>
-                <div className="grid"><div className="pointer-red" row="10" col="1"></div></div>
-                <div className="grid"><div className="pointer-red" row="10" col="2"></div></div>
-                <div className="grid"><div className="pointer-red" row="10" col="3"></div></div>
-                <div className="grid slant-back"><div className="pointer-red" row="10" col="4"></div></div>
-                <div className="grid slant"><div className="pointer-red" row="10" col="5"></div></div>
-                <div className="grid"><div className="pointer-red" row="10" col="6"></div></div>
-                <div className="grid"><div className="pointer-red" row="10" col="7"></div></div>
-                <div className="grid">
-                    <div className="pointer-red" row="10" col="8"></div>
-                    <div className="pointer-red pointer-rb" row="10" col="9"></div>
-                </div>
+                { Array(9).fill('').map((_, _row) => this._renderLine(_row + 1)) }
             </div>
-          );
+        );
     }
 }
 
-export {Checkerboard};
+export { Checkerboard };
 export default Checkerboard;
