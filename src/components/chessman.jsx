@@ -11,5 +11,5 @@ class Chessman extends React.Component {
     }
 }
 
-export {Chessman};
+export { Chessman };
 export default Chessman;
