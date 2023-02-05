@@ -6,7 +6,7 @@ import '../styles/chessman.less';
 
 class Chessman extends React.Component {
     render() {
-        const {group, role} = this.props;
+        const { group, role } = this.props;
         if (!role) {
             return null;
         }
