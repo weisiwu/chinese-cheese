@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/chessman.scss';
+import '../styles/chessman.less';
 
 class Chessman extends React.Component {
     render() {
