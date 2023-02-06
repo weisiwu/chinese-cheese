@@ -50,29 +50,31 @@ class Checkerboard extends React.Component {
             return (
                 <div key={id} className={`grid ${extCls}`}>
                     {/* 黑棋边界 */}
-                    <div className={`${baseCls} pointer-bottom`} row={row} col={col} id={id}></div>
+                    <div className={`${baseCls} pointer-bottom`} row={row} col={col} id={id}>
+                    </div>
                     {
                         isLast ?
                             <div className={`${baseCls} pointer-bottom last`} row={row} col={col} id={id}></div>
                             : null
                     }
                     {/* 红棋边界 */}
-                    <div className="pointer-red pointer-top" row={row} col={col} id={id}></div>
+                    <div className="pointer-red pointer-top" row={row + 1} col={col} id={`${row + 1}_${col}`}></div>
                     {
                         isLast ?
-                            <div className="pointer-red pointer-top last" row={row} col={col} id={id}></div>
+                            <div className="pointer-red pointer-top last" row={row + 1} col={col} id={`${row + 1}_${col}`}></div>
                             : null
                     }
                 </div>
             );
         }
 
+        const _row = row > 5 ? row + 1 : row;
         return (
             <div key={id} className={`grid ${extCls}`}>
-                <div className={`${baseCls}${gridCls}`} row={row} col={col} id={id}></div>
+                <div className={`${baseCls}${gridCls}`} row={_row} col={col} id={`${_row}_${col}`}></div>
                 {
                     isLast ?
-                        <div className={`${baseCls} last`} row={row} col={col} id={id}></div>
+                        <div className={`${baseCls} last`} row={_row} col={col + 1} id={`${_row}_${col + 1}`}></div>
                         : null
                 }
             </div>
@@ -98,6 +100,7 @@ class Checkerboard extends React.Component {
         </>;
     }
 
+    // 楚河汉界
     _renderBanner = () => {
         return (
             <>
@@ -105,7 +108,7 @@ class Checkerboard extends React.Component {
                 <div className='banner-right'><p>汉 界</p></div>
             </>
         );
-    };
+    }
 
     render() {
 
