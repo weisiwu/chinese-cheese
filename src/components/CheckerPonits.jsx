@@ -4,7 +4,7 @@
 */
 import React from 'react';
 import { createPortal } from 'react-dom';
-import Chessman from './chessman.jsx';
+import Chessman from './Chessman.jsx';
 // import { BLACK_ROLE, RED_ROLE } from '../utils/constants.js';
 import '../styles/checkerponits.less';
 

@@ -2,8 +2,8 @@
  * 棋盘
 */
 import React from 'react';
-import Chessman from './chessman.jsx';
-import { CheckBoardPoints } from '../utils/constants.js';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from '../utils/constants';
 import '../styles/checkerboard.less';
 
 // 棋盘关键纹理位置(行_列)
@@ -25,7 +25,9 @@ const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 // 2、 落子就干掉所在地的棋子
 // 3、 给棋子的移动添加规则
 // Step4 整局相关
-class Checkerboard extends React.Component {
+// Step5 是否可以落子提示
+// Step6 Ts化改造
+const Checkerboard = () => {
 
     /**
      * 渲染格子
@@ -34,7 +36,7 @@ class Checkerboard extends React.Component {
      * @param {Boolean} isDivider 是否为楚河汉界那行
      * @returns xml
      */
-    _renderGrid = (row, col, isDivider = false) => {
+    const _renderGrid = (row, col, isDivider = false) => {
         const id = `${row}_${col}`;
         // slant 和 point 都是纹理，命中条件((行+列))，即渲染
         const baseCls = row <= 5 ? 'pointer-black' : 'pointer-red';
@@ -57,14 +59,14 @@ class Checkerboard extends React.Component {
                     </div>
                     {
                         isLast ?
-                            <div className={`${baseCls} pointer-bottom last`} row={row} col={col} id={id}></div>
+                            <div className={`${baseCls} pointer-bottom last`} row={row} col={col} id={id} />
                             : null
                     }
                     {/* 红棋边界 */}
-                    <div className="pointer-red pointer-top" row={row + 1} col={col} id={`${row + 1}_${col}`}></div>
+                    <div className="pointer-red pointer-top" row={row + 1} col={col} id={`${row + 1}_${col}`} />
                     {
                         isLast ?
-                            <div className="pointer-red pointer-top last" row={row + 1} col={col} id={`${row + 1}_${col}`}></div>
+                            <div className="pointer-red pointer-top last" row={row + 1} col={col} id={`${row + 1}_${col}`} />
                             : null
                     }
                 </div>
@@ -74,10 +76,10 @@ class Checkerboard extends React.Component {
         const _row = row > 5 ? row + 1 : row;
         return (
             <div key={id} className={`grid ${extCls}`}>
-                <div className={`${baseCls}${gridCls}`} row={_row} col={col} id={`${_row}_${col}`}></div>
+                <div className={`${baseCls}${gridCls}`} row={_row} col={col} id={`${_row}_${col}`} />
                 {
                     isLast ?
-                        <div className={`${baseCls} last`} row={_row} col={col + 1} id={`${_row}_${col + 1}`}></div>
+                        <div className={`${baseCls} last`} row={_row} col={col + 1} id={`${_row}_${col + 1}`} />
                         : null
                 }
             </div>
@@ -89,22 +91,22 @@ class Checkerboard extends React.Component {
      * @param {Number} row 多少行
      * @returns xml
      */
-    _renderLine = (row) => {
+    const _renderLine = (row) => {
         if (row === 5) {
             return (
                 <div className="divider">
-                    { this._renderBanner() }
-                    { Array(8).fill('').map((_, _col) => this._renderGrid(row, _col + 1, true)) }
+                    { _renderBanner() }
+                    { Array(8).fill('').map((_, _col) => _renderGrid(row, _col + 1, true)) }
                 </div>
             );
         }
         return <>
-            { Array(8).fill('').map((_, _col) => this._renderGrid(row, _col + 1)) }
+            { Array(8).fill('').map((_, _col) => _renderGrid(row, _col + 1)) }
         </>;
     }
 
     // 楚河汉界
-    _renderBanner = () => {
+    const _renderBanner = () => {
         return (
             <>
                 <div className='banner-left'><p>楚 河</p></div>
@@ -113,15 +115,33 @@ class Checkerboard extends React.Component {
         );
     }
 
-    render() {
+    const [{ isOver, canDrop }, drop] = useDrop(
+        () => ({
+            accept: ItemTypes.CARD,
+            // canDrop: true,
+            canDrop: (args) => {
+                console.log('args', args);
+                return true;
+            },
+            // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
+            // 调用 Game.js
+            // drop: (args) => console.log('drop事件发生', args),
+            drop: (args) => {
+                
+            },
+            collect: (monitor) => ({
+                isOver: monitor.isOver(),
+                canDrop: monitor.canDrop()
+            })
+        })
+    );
 
-        // 布局是八横八纵，横向多一个楚河汉界
-        return (
-            <div id="Checkerboard">
-                { Array(9).fill('').map((_, _row) => this._renderLine(_row + 1)) }
-            </div>
-        );
-    }
+    // 布局是八横八纵，横向多一个楚河汉界
+    return (
+        <div id="Checkerboard" ref={drop}>
+            { Array(9).fill('').map((_, _row) => _renderLine(_row + 1)) }
+        </div>
+    );
 }
 
 export { Checkerboard };

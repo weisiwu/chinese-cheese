@@ -154,3 +154,8 @@ export const InitCheckBoardPoints = [
         }
     ],
 ];
+
+// dnd type
+export const ItemTypes = {
+    CARD: 'card',
+};

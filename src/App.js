@@ -1,5 +1,7 @@
 import React from 'react';
-import Checkerboard from './components/checkerboard.jsx';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import Checkerboard from './components/Checkerboard.jsx';
 import CheckerPonits from './components/CheckerPonits.jsx';
 import { InitCheckBoardPoints } from '../src/utils/constants.js';
 
@@ -21,8 +23,10 @@ class App extends React.Component {
     render() {
         return (
             <>
-                <Checkerboard />
-                <CheckerPonits points={this.state.points} />
+                <DndProvider backend={HTML5Backend}>
+                    <Checkerboard />
+                    <CheckerPonits points={this.state.points} />
+                </DndProvider>
             </>
         );
     }
