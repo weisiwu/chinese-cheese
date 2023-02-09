@@ -14,6 +14,43 @@ const anchorRt = ['3_1', '3_7', '8_1', '8_7'];
 const anchorLt = ['3_2', '3_8', '8_2', '8_8'];
 const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 
+// 落子点
+const Pointor = ({ className, row, col, move }) => {
+    const [{ isOver, canDrop }, drop] = useDrop(
+        () => ({
+            accept: ItemTypes.CARD,
+            canDrop: (args) => {
+                console.log('args', args);
+                // 先设置为所有的点都能落子
+                return true;
+            },
+            // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
+            // 调用 Game.js
+            // drop: (args) => console.log('drop事件发生', args),
+            drop: (args) => {
+                // 看看其他demo是不是drop的时候直接render
+                // hover的棋子要变色
+                // 可以走通，但是要修改整个元数据
+                move();
+            },
+            collect: (monitor) => ({
+                isOver: monitor.isOver(),
+                canDrop: monitor.canDrop()
+            })
+        })
+    );
+    if (!(row && col)) { return null; }
+
+    return (
+        <div
+            ref={drop}
+            className={className}
+            row={row}
+            col={col}
+            id={`${row}_${col}`} />
+    );
+};
+
 // Step1 棋盘渲染
 // 1、 改造棋盘，在对应节点上留下钩子，方便后续棋子渲染定位
 // 2、 画出楚河汉界
@@ -27,7 +64,7 @@ const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 // Step4 整局相关
 // Step5 是否可以落子提示
 // Step6 Ts化改造
-const Checkerboard = () => {
+const Checkerboard = ({ move }) => {
 
     /**
      * 渲染格子
@@ -51,22 +88,22 @@ const Checkerboard = () => {
         if (anchorLb.includes(id)) { extCls += ' anchor-lb'; }
         if (isDivider) { extCls += ' hide-border'; }
 
+        // TODO: 在每个grid里面都加上 drop ref，然后扩大区域(隐形)，做到棋子随意移动
         if (row === 5) {
             return (
                 <div key={id} className={`grid ${extCls}`}>
                     {/* 黑棋边界 */}
-                    <div className={`${baseCls} pointer-bottom`} row={row} col={col} id={id}>
-                    </div>
+                    <Pointor move={move} className={`${baseCls} pointer-bottom`} row={row} col={col} />
                     {
-                        isLast ?
-                            <div className={`${baseCls} pointer-bottom last`} row={row} col={col} id={id} />
+                        isLast
+                            ? <Pointor move={move} className={`${baseCls} pointer-bottom last`} row={row} col={col} />
                             : null
                     }
                     {/* 红棋边界 */}
                     <div className="pointer-red pointer-top" row={row + 1} col={col} id={`${row + 1}_${col}`} />
                     {
-                        isLast ?
-                            <div className="pointer-red pointer-top last" row={row + 1} col={col} id={`${row + 1}_${col}`} />
+                        isLast
+                            ? <Pointor move={move} className="pointer-red pointer-top last" row={row + 1} col={col} />
                             : null
                     }
                 </div>
@@ -76,10 +113,10 @@ const Checkerboard = () => {
         const _row = row > 5 ? row + 1 : row;
         return (
             <div key={id} className={`grid ${extCls}`}>
-                <div className={`${baseCls}${gridCls}`} row={_row} col={col} id={`${_row}_${col}`} />
+                <Pointor move={move} className={`${baseCls}${gridCls}`} row={_row} col={col} />
                 {
-                    isLast ?
-                        <div className={`${baseCls} last`} row={_row} col={col + 1} id={`${_row}_${col + 1}`} />
+                    isLast
+                        ? <Pointor move={move} className={`${baseCls} last`} row={_row} col={col + 1} />
                         : null
                 }
             </div>
@@ -115,30 +152,9 @@ const Checkerboard = () => {
         );
     }
 
-    const [{ isOver, canDrop }, drop] = useDrop(
-        () => ({
-            accept: ItemTypes.CARD,
-            // canDrop: true,
-            canDrop: (args) => {
-                console.log('args', args);
-                return true;
-            },
-            // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
-            // 调用 Game.js
-            // drop: (args) => console.log('drop事件发生', args),
-            drop: (args) => {
-                
-            },
-            collect: (monitor) => ({
-                isOver: monitor.isOver(),
-                canDrop: monitor.canDrop()
-            })
-        })
-    );
-
     // 布局是八横八纵，横向多一个楚河汉界
     return (
-        <div id="Checkerboard" ref={drop}>
+        <div id="Checkerboard">
             { Array(9).fill('').map((_, _row) => _renderLine(_row + 1)) }
         </div>
     );

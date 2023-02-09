@@ -23,12 +23,12 @@ class CheckerPonits extends React.Component {
 
     // 渲染单个棋子
     _renderPoint = (position, point) => {
-        if (!position || !point) { return null; }
+        if (!(position && point)) { return null; }
         const node = document.getElementById(position);
         // console.log('_renderPoint', position, point, node);
         const { role, group } = point || {};
         console.log('point', role, group);
-        if (!role || !group || !node) { return null; }
+        if (!(role && group && node)) { return null; }
         return createPortal((
             <Chessman key={position} group={group} role={role} />
         ), node);
