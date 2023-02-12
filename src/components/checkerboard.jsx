@@ -4,6 +4,7 @@
 import React, { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utils/constants';
+import { canChessDrop } from '../utils/Game.js'
 import '../styles/checkerboard.less';
 
 // 棋盘关键纹理位置(行_列)
@@ -16,11 +17,15 @@ const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 
 // 落子点
 const Pointor = ({ className, row, col, move }) => {
+    // TODO: 是否需要缓存，每个pointer 都被渲染了。
     const [{ _ }, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,
-            canDrop: (args) => {
+            canDrop: (moveChess) => {
                 // 先设置为所有的点都能落子
+                console.log('moveChess', moveChess, row, col);
+                // TODO: 缺号参数 points
+                canChessDrop(moveChess, { row, col });
                 return true;
             },
             // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
