@@ -38,7 +38,6 @@ class App extends React.Component {
             const _targetCol = targetCol - 1;
             const _fromRow = fromRow - 1;
             const _fromCol = fromCol - 1;
-            console.log('xx', currentPoints[_targetRow]);
             if (_targetRow <= 9 && _targetCol <= 8) {
                 // 移动选中棋子
                 currentPoints[_targetRow][_targetCol] = { role, group };
