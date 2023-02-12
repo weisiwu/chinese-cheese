@@ -11,15 +11,12 @@ import '../styles/chessman.less';
 // TODO: 拖动过程中，preview效果优化
 // TODO: 看下 DragPreviewImage 参数是怎么调用的。
 const Chessman = (props) => {
-    const { group, role } = props;
+    const { group, role, position = '' } = props;
+    const [ fromRow, fromCol ] = position.split('_') || [];
     const [{ isDragging }, drag, preview] = useDrag({
         type: ItemTypes.CARD,
-        item: () => ({ role, group }),
-        // collect: (monitor) => ({
-        //     isDragging: monitor.isDragging()
-        // })
+        item: () => ({ role, group, fromRow, fromCol }),
         collect: (monitor) => {
-            console.log('monitor', monitor);
             return {
                 isDragging: monitor.isDragging()
             };
@@ -33,7 +30,7 @@ const Chessman = (props) => {
             <DragPreviewImage connect={preview} src={knightImage} />
             <div
                 ref={drag}
-                class="chessman"
+                className="chessman"
                 // 临时添加
                 style={{ opacity: isDragging ? 0.5 : 1 }}
                 group={group}>

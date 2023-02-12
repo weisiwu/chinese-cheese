@@ -1,7 +1,7 @@
 /**
  * 棋盘
 */
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../utils/constants';
 import '../styles/checkerboard.less';
@@ -16,22 +16,21 @@ const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 
 // 落子点
 const Pointor = ({ className, row, col, move }) => {
-    const [{ isOver, canDrop }, drop] = useDrop(
+    const [{ _ }, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,
             canDrop: (args) => {
-                console.log('args', args);
                 // 先设置为所有的点都能落子
                 return true;
             },
             // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
             // 调用 Game.js
-            // drop: (args) => console.log('drop事件发生', args),
-            drop: (args) => {
+            drop: (moveChess) => {
                 // 看看其他demo是不是drop的时候直接render
                 // hover的棋子要变色
                 // 可以走通，但是要修改整个元数据
-                move();
+                const { group, role, fromRow, fromCol } = moveChess || {};
+                move({ group, role }, { row: fromRow, col: fromCol });
             },
             collect: (monitor) => ({
                 isOver: monitor.isOver(),
@@ -87,23 +86,32 @@ const Checkerboard = ({ move }) => {
         if (anchorLt.includes(id)) { extCls += ' anchor-lt'; }
         if (anchorLb.includes(id)) { extCls += ' anchor-lb'; }
         if (isDivider) { extCls += ' hide-border'; }
+        const _move = useCallback((targetRow, targetCol) => {
+            return ({ group, role }, { row: fromRow, col: fromCol }) => {
+                move(
+                    { group, role },
+                    { row: targetRow, col: targetCol },
+                    { row: fromRow, col: fromCol }
+                );
+            };
+        }, [col, row]);
 
         // TODO: 在每个grid里面都加上 drop ref，然后扩大区域(隐形)，做到棋子随意移动
         if (row === 5) {
             return (
                 <div key={id} className={`grid ${extCls}`}>
                     {/* 黑棋边界 */}
-                    <Pointor move={move} className={`${baseCls} pointer-bottom`} row={row} col={col} />
+                    <Pointor move={_move(row, col)} className={`${baseCls} pointer-bottom`} row={row} col={col} />
                     {
                         isLast
-                            ? <Pointor move={move} className={`${baseCls} pointer-bottom last`} row={row} col={col} />
+                            ? <Pointor move={_move(row, col)} className={`${baseCls} pointer-bottom last`} row={row} col={col} />
                             : null
                     }
                     {/* 红棋边界 */}
                     <div className="pointer-red pointer-top" row={row + 1} col={col} id={`${row + 1}_${col}`} />
                     {
                         isLast
-                            ? <Pointor move={move} className="pointer-red pointer-top last" row={row + 1} col={col} />
+                            ? <Pointor move={_move(row + 1, col)} className="pointer-red pointer-top last" row={row + 1} col={col} />
                             : null
                     }
                 </div>
@@ -113,10 +121,10 @@ const Checkerboard = ({ move }) => {
         const _row = row > 5 ? row + 1 : row;
         return (
             <div key={id} className={`grid ${extCls}`}>
-                <Pointor move={move} className={`${baseCls}${gridCls}`} row={_row} col={col} />
+                <Pointor move={_move(_row, col)} className={`${baseCls}${gridCls}`} row={_row} col={col} />
                 {
                     isLast
-                        ? <Pointor move={move} className={`${baseCls} last`} row={_row} col={col + 1} />
+                        ? <Pointor move={_move(_row, col + 1)} className={`${baseCls} last`} row={_row} col={col + 1} />
                         : null
                 }
             </div>
