@@ -31,13 +31,15 @@ class App extends React.Component {
         { row: targetRow, col: targetCol }: target = {},
         { row: fromRow, col: fromCol }: from = {}
     ) {
+        if (Number(targetRow) === Number(fromRow) && Number(targetCol) === Number(fromCol)) { return; }
         if (targetRow && targetCol) {
             const currentPoints = this.state.points || {};
             const _targetRow = targetRow - 1;
             const _targetCol = targetCol - 1;
             const _fromRow = fromRow - 1;
             const _fromCol = fromCol - 1;
-            if (currentPoints[_targetRow] && currentPoints[_targetRow][_targetCol]) {
+            console.log('xx', currentPoints[_targetRow]);
+            if (_targetRow <= 9 && _targetCol <= 8) {
                 // 移动选中棋子
                 currentPoints[_targetRow][_targetCol] = { role, group };
                 // 删除已有之前棋子。

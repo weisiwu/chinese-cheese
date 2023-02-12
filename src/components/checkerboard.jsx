@@ -104,14 +104,14 @@ const Checkerboard = ({ move }) => {
                     <Pointor move={_move(row, col)} className={`${baseCls} pointer-bottom`} row={row} col={col} />
                     {
                         isLast
-                            ? <Pointor move={_move(row, col)} className={`${baseCls} pointer-bottom last`} row={row} col={col} />
+                            ? <Pointor move={_move(row, col + 1)} className={`${baseCls} pointer-bottom last`} row={row} col={col + 1} />
                             : null
                     }
                     {/* 红棋边界 */}
-                    <div className="pointer-red pointer-top" row={row + 1} col={col} id={`${row + 1}_${col}`} />
+                    <Pointor move={_move(row + 1, col)} className="pointer-red pointer-top" row={row + 1} col={col} />
                     {
                         isLast
-                            ? <Pointor move={_move(row + 1, col)} className="pointer-red pointer-top last" row={row + 1} col={col} />
+                            ? <Pointor move={_move(row + 1, col + 1)} className="pointer-red pointer-top last" row={row + 1} col={col + 1} />
                             : null
                     }
                 </div>
@@ -139,7 +139,7 @@ const Checkerboard = ({ move }) => {
     const _renderLine = (row) => {
         if (row === 5) {
             return (
-                <div className="divider">
+                <div className="divider" key={row}>
                     { _renderBanner() }
                     { Array(8).fill('').map((_, _col) => _renderGrid(row, _col + 1, true)) }
                 </div>
