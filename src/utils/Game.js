@@ -13,16 +13,15 @@ import { BLACK_ROLE, RED_ROLE, ROLE } from './constants.js';
 */
 export const canChessDrop = (chess, targetPoint, points) => {
     let canDrop = false;
-    if (!(points && chess)) { return canDrop; }
+    if (!(targetPoint && chess)) { return canDrop; }
 
     const { role, group } = chess || {};
 
-    if (isCrossBorder(chess, targetPoint.row)) { return canDrop; }
 
     switch (role) {
         case BLACK_ROLE.SOLIDER:
         case RED_ROLE.SOLIDER:
-            canDrop = isViolateSoliderRule();
+            canDrop = isViolateSoliderRule(chess, targetPoint);
             break;
         case BLACK_ROLE.GUN:
         case RED_ROLE.GUN:
@@ -61,28 +60,33 @@ export const canChessDrop = (chess, targetPoint, points) => {
  * @returns Boolean 是否为越界
 */
 const isCrossBorder = (chess, row) => {
-    let isCross = false;
-
-    const { role, group } = chess || {};
-
-    switch (role) {
-        case BLACK_ROLE.ELEPHANT:
-        case RED_ROLE.ELEPHANT:
-        case BLACK_ROLE.GUARD:
-        case RED_ROLE.GUARD:
-        case BLACK_ROLE.MARSHAL:
-        case RED_ROLE.MARSHAL:
-            isCross = group === ROLE.RED ? row < 6 : row >= 6;
-            break;
-        default:
-            break;
-    }
-    return isCross;
+    const { group } = chess || {};
+    return group === ROLE.RED ? row < 6 : row >= 6;
 }
 
 // 下列为是否违反各个角色（如车、炮）移动规则判断
-const isViolateSoliderRule = () => {
-    return false;
+const isViolateSoliderRule = (chess, targetPoint) => {
+    const { row: targetRow, col: targetCol } = targetPoint || {};
+    const fromRow = Number(chess.fromRow);
+    const fromCol = Number(chess.fromCol);
+    const isRed = chess.group === ROLE.RED;
+    const isCross = isCrossBorder(chess, targetRow);
+
+    if (isCross) {
+        return (
+            Math.abs(fromCol - targetCol) + (Math.abs(fromRow - targetRow)) === 1
+            && (isRed ? targetRow <= fromRow : targetRow >= fromRow)
+        );
+    }
+    if (isRed) {
+        return (
+            targetRow === fromRow - 1 && targetCol === fromCol
+        );
+    } else {
+        return (
+            targetRow === fromRow + 1 && targetCol === fromCol
+        );
+    }
 };
 const isViolateVehicleRule = () => {};
 const isViolateHorserRule = () => {};

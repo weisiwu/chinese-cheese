@@ -23,10 +23,8 @@ const Pointor = ({ className, row, col, move }) => {
             accept: ItemTypes.CARD,
             canDrop: (moveChess) => {
                 // 先设置为所有的点都能落子
-                console.log('moveChess', moveChess, row, col);
                 // TODO: 缺号参数 points
-                canChessDrop(moveChess, { row, col });
-                return true;
+                return canChessDrop(moveChess, { row, col });
             },
             // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
             // 调用 Game.js
