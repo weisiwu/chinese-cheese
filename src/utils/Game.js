@@ -64,7 +64,14 @@ const isCrossBorder = (chess, row) => {
     return group === ROLE.RED ? row < 6 : row >= 6;
 }
 
-// 下列为是否违反各个角色（如车、炮）移动规则判断
+/**
+ * 下列为是否违反各个角色（如车、炮）移动规则判断 
+ * 参数顺序相同，缺少则表示无需此参数
+ * @param {Object} chess 被移动的棋子，含起始位置、棋子信息
+ * @param {Object} targetPoint 目标位置信息
+ * @param {Array} points 所有棋子信息
+ * @return {Boolean} 是否可以落子
+*/
 const isViolateSoliderRule = (chess, targetPoint) => {
     const { row: targetRow, col: targetCol } = targetPoint || {};
     const fromRow = Number(chess.fromRow);
@@ -88,7 +95,7 @@ const isViolateSoliderRule = (chess, targetPoint) => {
         );
     }
 };
-const isViolateVehicleRule = () => {};
+const isViolateVehicleRule = (chess, targetPoint, points) => {};
 const isViolateHorserRule = () => {};
 const isViolateElephantRule = () => {};
 const isViolateGuardRule = () => {};

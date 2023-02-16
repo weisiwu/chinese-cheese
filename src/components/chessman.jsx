@@ -1,5 +1,5 @@
 /**
- * 棋子
+ * 双方棋子
 */
 import React from 'react';
 import { useDrag, DragPreviewImage } from "react-dnd";

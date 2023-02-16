@@ -1,12 +1,10 @@
 /**
- * 棋子布局
- * 这个组件直接盖在棋盘上，棋盘自身几乎不会重新渲染
+ * 将所有棋子一一挂接到落子点
+ * 直接盖在棋盘上，棋盘自身几乎不会重新渲染
 */
 import React from 'react';
 import { createPortal } from 'react-dom';
 import Chessman from './Chessman.jsx';
-// import { BLACK_ROLE, RED_ROLE } from '../utils/constants.js';
-import '../styles/checkerponits.less';
 
 class CheckerPonits extends React.Component {
     // 渲染全盘棋子

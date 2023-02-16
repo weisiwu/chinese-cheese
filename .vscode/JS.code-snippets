@@ -1,0 +1,10 @@
+{
+	"添加TODO计划": {
+		"scope": "javascript,typescript,javascriptreact,typescriptreact",
+		"prefix": "todo",
+		"body": [
+			"// TODO: "
+		],
+		"description": "todo项注释"
+	}
+}

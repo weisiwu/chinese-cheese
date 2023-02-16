@@ -1,10 +1,9 @@
 /**
- * 棋盘
+ * 棋盘样式布局
+ * 包括楚河汉界、炮的落子点、交错线等
 */
 import React, { useCallback } from 'react';
-import { useDrop } from 'react-dnd';
-import { ItemTypes } from '../utils/constants';
-import { canChessDrop } from '../utils/Game.js'
+import { Pointor } from './Pointor.jsx';
 import '../styles/checkerboard.less';
 
 // 棋盘关键纹理位置(行_列)
@@ -15,43 +14,6 @@ const anchorRt = ['3_1', '3_7', '8_1', '8_7'];
 const anchorLt = ['3_2', '3_8', '8_2', '8_8'];
 const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 
-// 落子点
-const Pointor = ({ className, row, col, move }) => {
-    // TODO: 是否需要缓存，每个pointer 都被渲染了。
-    const [{ _ }, drop] = useDrop(
-        () => ({
-            accept: ItemTypes.CARD,
-            canDrop: (moveChess) => {
-                // 先设置为所有的点都能落子
-                // TODO: 缺号参数 points
-                return canChessDrop(moveChess, { row, col });
-            },
-            // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
-            // 调用 Game.js
-            drop: (moveChess) => {
-                // 看看其他demo是不是drop的时候直接render
-                // hover的棋子要变色
-                // 可以走通，但是要修改整个元数据
-                const { group, role, fromRow, fromCol } = moveChess || {};
-                move({ group, role }, { row: fromRow, col: fromCol });
-            },
-            collect: (monitor) => ({
-                isOver: monitor.isOver(),
-                canDrop: monitor.canDrop()
-            })
-        })
-    );
-    if (!(row && col)) { return null; }
-
-    return (
-        <div
-            ref={drop}
-            className={className}
-            row={row}
-            col={col}
-            id={`${row}_${col}`} />
-    );
-};
 
 // Step1 棋盘渲染
 // 1、 改造棋盘，在对应节点上留下钩子，方便后续棋子渲染定位
