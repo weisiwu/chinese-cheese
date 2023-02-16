@@ -287,3 +287,10 @@ export const InitCheckBoardPointsTmp = [
 export const ItemTypes = {
     CARD: 'card',
 };
+
+export const WINNER = {
+    NOT_FINISH: 0, // 对局未结束
+    RED: 1, // 红方
+    BLACK: 2, // 黑方
+    TIE: 3, // 平局
+};

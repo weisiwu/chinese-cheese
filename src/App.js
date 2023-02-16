@@ -4,6 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Checkerboard from './components/Checkerboard.jsx';
 import CheckerPonits from './components/CheckerPonits.jsx';
 import { InitCheckBoardPoints, InitCheckBoardPointsTmp } from '../src/utils/constants.js';
+import './store.js'
 
 class App extends React.Component {
     constructor(props) {
