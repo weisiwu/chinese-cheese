@@ -3,9 +3,12 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Checkerboard from './components/Checkerboard.jsx';
 import CheckerPonits from './components/CheckerPonits.jsx';
-import { InitCheckBoardPoints, InitCheckBoardPointsTmp } from '../src/utils/constants.js';
+import { InitCheckBoardPoints } from '../src/utils/constants.js';
 import './store.js'
 
+// (wsw)TODO: 整体转换为TS
+// (wsw)TODO: 添加单元测试
+// (wsw)TODO: 打包生成什么东西？
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -20,7 +23,7 @@ class App extends React.Component {
     /**
      * 渲染整体棋盘
      */
-    _updatePoints(points = InitCheckBoardPointsTmp) {
+    _updatePoints(points = InitCheckBoardPoints) {
         this.setState({ points });
     }
 

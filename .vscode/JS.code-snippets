@@ -3,7 +3,7 @@
 		"scope": "javascript,typescript,javascriptreact,typescriptreact",
 		"prefix": "todo",
 		"body": [
-			"// TODO: "
+			"// (wsw)TODO: "
 		],
 		"description": "todo项注释"
 	}
