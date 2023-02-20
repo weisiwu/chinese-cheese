@@ -2,8 +2,10 @@
  * 棋盘样式布局
  * 包括楚河汉界、炮的落子点、交错线等
 */
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Pointor } from './Pointor.jsx';
+import { Actions } from '../store.js'
 import '../styles/checkerboard.less';
 
 // 棋盘关键纹理位置(行_列)
@@ -35,8 +37,15 @@ const anchorLb = ['2_2', '2_8', '7_2', '7_8'];
 // Step4 整局相关
 // Step5 是否可以落子提示
 // Step6 Ts化改造
-const Checkerboard = ({ move }) => {
+const Checkerboard = connect((state) => ({
+    points: state.pointors
+}), {
+    move: Actions.updatePointors,
+    init: Actions.resetPointors,
+})(({ move, pointors, init }) => {
+    // console.log('棋盘上的棋子', pointors);
 
+    console.log('init', init);
     /**
      * 渲染格子
      * @param {Number} row 多少行
@@ -132,13 +141,17 @@ const Checkerboard = ({ move }) => {
         );
     }
 
+    useEffect(() => {
+        init();
+    }, []);
+
     // 布局是八横八纵，横向多一个楚河汉界
     return (
         <div id="Checkerboard">
             { Array(9).fill('').map((_, _row) => _renderLine(_row + 1)) }
         </div>
     );
-}
+});
 
 export { Checkerboard };
 export default Checkerboard;

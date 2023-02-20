@@ -3,10 +3,13 @@
  * 直接盖在棋盘上，棋盘自身几乎不会重新渲染
 */
 import React from 'react';
+import { connect } from 'react-redux';
 import { createPortal } from 'react-dom';
 import Chessman from './Chessman.jsx';
 
-class CheckerPonits extends React.Component {
+const CheckerPonits = connect((state) => ({
+    points: state.pointors
+}))(class CheckerPonits extends React.Component {
     // 渲染全盘棋子
     _renderPoints = () => {
         if (!Array.isArray(this.props.points)) { return null; }
@@ -23,6 +26,7 @@ class CheckerPonits extends React.Component {
     _renderPoint = (position, point) => {
         if (!(position && point)) { return null; }
         const node = document.getElementById(position);
+        console.log('position',position)
         const { role, group } = point || {};
         if (!(role && group && node)) { return null; }
         return createPortal((
@@ -31,6 +35,7 @@ class CheckerPonits extends React.Component {
     }
 
     render() {
+        console.log('棋盘上的棋子11', this.props.points);
         if (!this.props.points) { return null; }
         return (
             <>
@@ -38,7 +43,7 @@ class CheckerPonits extends React.Component {
             </>
         );
     }
-}
+});
 
 export { CheckerPonits };
 export default CheckerPonits;

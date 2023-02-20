@@ -1,30 +1,87 @@
 /**
  * 游戏全局数据管理
 */
-import { createStore } from 'redux';
-import { ROLE, WINNER } from './utils/constants';
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { ROLE, WINNER, InitCheckBoardPoints } from './utils/constants';
 
-/*
- * action 类型
- */
-export const ADD_TODO = 'ADD_TODO';
+// 所有棋子信息
+const pointors = createSlice({
+    name: 'pointors',
+    initialState: [],
+    reducers: {
+        // 落子后使用该函数
+        updatePointors: (state, { payload }) => {
+            const { chess, targetRow, targetCol } = payload || {};
+            const { fromRow, fromCol } = chess || {};
 
-/*
- * action 创建函数
- */
-export function addTodo(text) {
-    return { type: ADD_TODO, text };
-}
+            if (fromRow && fromCol && targetRow && targetCol) {
+                state[fromRow][fromCol] = '';
+                state[targetRow][targetCol] = chess;
+            }
+            return state;
+        },
+        resetPointors: () => {
+            return InitCheckBoardPoints;
+        },
+    }
+});
 
-const reducers = () => {
-    return {};
+// 当前行动方，黑子优先
+const groupInAction = createSlice({
+    name: 'groupInAction',
+    initialState: ROLE.BLACK,
+    // (wsw)TODO: 待补充
+    reducers: {}
+});
+
+// 游戏开始时间
+const startTime = createSlice({
+    name: 'startTime',
+    initialState: 0,
+    // (wsw)TODO: 待补充
+    reducers: {}
+});
+
+// 游戏进行局数
+const round = createSlice({
+    name: 'round',
+    initialState: 0,
+    // (wsw)TODO: 待补充
+    reducers: {}
+});
+
+// 对局记载 - 后续生成棋谱使用
+const roundCache = createSlice({
+    name: 'roundCache',
+    initialState: [],
+    // (wsw)TODO: 待补充
+    reducers: {}
+});
+
+// 何方取胜
+const result = createSlice({
+    name: 'result',
+    initialState: WINNER.NOT_FINISH,
+    // (wsw)TODO: 待补充
+    reducers: {}
+});
+
+export const Actions = {
+    ...pointors.actions,
+    ...groupInAction.actions,
+    ...startTime.actions,
+    ...round.actions,
+    ...roundCache.actions,
+    ...result.actions,
 };
 
-const store = createStore(reducers, {
-    pointors: [], // 所有棋子信息
-    groupInAction: ROLE.BLACK, // 当前行动方，黑子优先
-    startTime: 0, // 游戏开始时间
-    round: 0, // 游戏进行局数
-    roundCache: [], // 对局记载 - 后续生成棋谱使用
-    result: WINNER.NOT_FINISH, // 何方取胜
+export default configureStore({
+    reducer: {
+        pointors: pointors.reducer,
+        groupInAction: groupInAction.reducer,
+        startTime: startTime.reducer,
+        round: round.reducer,
+        roundCache: roundCache.reducer,
+        result: result.reducer,
+    },
 });

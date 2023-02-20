@@ -1,10 +1,11 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Checkerboard from './components/Checkerboard.jsx';
 import CheckerPonits from './components/CheckerPonits.jsx';
 import { InitCheckBoardPoints } from '../src/utils/constants.js';
-import './store.js'
+import store from './store.js'
 
 // (wsw)TODO: 整体转换为TS
 // (wsw)TODO: 添加单元测试
@@ -14,6 +15,7 @@ class App extends React.Component {
         super(props);
         this._updatePoints = this._updatePoints.bind(this);
         this._movePoint = this._movePoint.bind(this);
+        // this.dispatch = useDispatch();
         this.state = {
             points: null
         };
@@ -55,21 +57,22 @@ class App extends React.Component {
     /** 生命周期 */
     componentDidMount() {
         // 棋盘就绪后，渲染棋子初始化布局
-        this.setState({
-            points: InitCheckBoardPoints
-        });
+        // this.setState({
+        //     points: InitCheckBoardPoints
+        // });
+        console.log('dispatc', this.props)
     }
 
     render() {
+        console.log('store', this.props)
         return (
             <>
-                <DndProvider backend={HTML5Backend}>
-                    <Checkerboard
-                        move={this._movePoint}
-                        points={this.state.points} />
-                    <CheckerPonits
-                        points={this.state.points} />
-                </DndProvider>
+                <Provider store={store}>
+                    <DndProvider backend={HTML5Backend}>
+                        <Checkerboard move={this._movePoint} />
+                        <CheckerPonits />
+                    </DndProvider>
+                </Provider>
             </>
         );
     }
