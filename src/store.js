@@ -10,15 +10,24 @@ const pointors = createSlice({
     initialState: [],
     reducers: {
         // 落子后使用该函数
-        updatePointors: (state, { payload }) => {
+        updatePointors: (points, { payload }) => {
             const { chess, targetRow, targetCol } = payload || {};
-            const { fromRow, fromCol } = chess || {};
-
-            if (fromRow && fromCol && targetRow && targetCol) {
-                state[fromRow][fromCol] = '';
-                state[targetRow][targetCol] = chess;
+            const { group, role, fromRow, fromCol } = chess || {};
+            if (Number(targetRow) === Number(fromRow) && Number(targetCol) === Number(fromCol)) { return points; }
+            if (targetRow && targetCol) {
+                const _targetRow = targetRow - 1;
+                const _targetCol = targetCol - 1;
+                const _fromRow = fromRow - 1;
+                const _fromCol = fromCol - 1;
+                if (_targetRow <= 9 && _targetCol <= 8) {
+                    // 移动选中棋子
+                    points[_targetRow][_targetCol] = { role, group };
+                    // 删除已有之前棋子。
+                    points[_fromRow][_fromCol] = '';
+                    console.log('delete', _fromRow, _fromCol, points[_fromRow][_fromCol]);
+                }
             }
-            return state;
+            return points;
         },
         resetPointors: () => {
             return InitCheckBoardPoints;

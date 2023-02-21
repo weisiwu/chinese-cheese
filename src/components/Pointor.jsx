@@ -3,12 +3,15 @@
 */
 import React, { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
+import { connect } from 'react-redux';
 import { ItemTypes } from '../utils/constants';
 import { canChessDrop } from '../utils/Game.js'
 import '../styles/pointor.less';
 
 // 落子点
-const Pointor = ({ className, row, col, move }) => {
+const Pointor = connect((state) => ({
+    points: state.pointors
+}))(({ className, row, col, move, points }) => {
     // TODO: 是否需要缓存，每个pointer 都被渲染了。
     const [{ _ }, drop] = useDrop(
         () => ({
@@ -16,7 +19,8 @@ const Pointor = ({ className, row, col, move }) => {
             canDrop: (moveChess) => {
                 // 先设置为所有的点都能落子
                 // TODO: 缺号参数 points
-                return canChessDrop(moveChess, { row, col });
+                console.log('canDrop', points)
+                return canChessDrop(moveChess, { row, col }, points);
             },
             // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
             // 调用 Game.js
@@ -31,8 +35,10 @@ const Pointor = ({ className, row, col, move }) => {
                 isOver: monitor.isOver(),
                 canDrop: monitor.canDrop()
             })
-        })
+        }),
+        [points],
     );
+
     if (!(row && col)) { return null; }
 
     return (
@@ -43,7 +49,7 @@ const Pointor = ({ className, row, col, move }) => {
             col={col}
             id={`${row}_${col}`} />
     );
-};
+});
 
 export { Pointor };
 export default Pointor;

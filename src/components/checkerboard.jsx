@@ -42,10 +42,7 @@ const Checkerboard = connect((state) => ({
 }), {
     move: Actions.updatePointors,
     init: Actions.resetPointors,
-})(({ move, pointors, init }) => {
-    // console.log('棋盘上的棋子', pointors);
-
-    console.log('init', init);
+})(({ move, points, init }) => {
     /**
      * 渲染格子
      * @param {Number} row 多少行
@@ -69,11 +66,11 @@ const Checkerboard = connect((state) => ({
         if (isDivider) { extCls += ' hide-border'; }
         const _move = useCallback((targetRow, targetCol) => {
             return ({ group, role }, { row: fromRow, col: fromCol }) => {
-                move(
-                    { group, role },
-                    { row: targetRow, col: targetCol },
-                    { row: fromRow, col: fromCol }
-                );
+                move({
+                    chess: { group, role, fromRow, fromCol },
+                    targetRow,
+                    targetCol,
+                });
             };
         }, [col, row]);
 

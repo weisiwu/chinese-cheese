@@ -12,10 +12,14 @@ import { BLACK_ROLE, RED_ROLE, ROLE } from './constants.js';
 */
 export const canChessDrop = (chess, targetPoint, points) => {
     let canDrop = false;
-    if (!(targetPoint && chess)) { return canDrop; }
+    if (!(targetPoint && chess && points.length)) { return canDrop; }
+    const {
+        targetRow, targetCol,
+        fromRow, fromCol,
+    } = parsePosition(chess, targetPoint);
+    if (targetRow === fromRow && targetCol === fromCol) { return canDrop; }
 
-    const { role, group } = chess || {};
-
+    const { role } = chess || {};
 
     switch (role) {
         case BLACK_ROLE.SOLIDER:
@@ -24,31 +28,34 @@ export const canChessDrop = (chess, targetPoint, points) => {
             break;
         case BLACK_ROLE.GUN:
         case RED_ROLE.GUN:
-            canDrop = isViolateGunRule();
+            canDrop = isViolateGunRule(chess, targetPoint, points);
             break;
         case BLACK_ROLE.VEHICLE:
         case RED_ROLE.VEHICLE:
-            canDrop = isViolateVehicleRule();
+            canDrop = isViolateVehicleRule(chess, targetPoint, points);
+            console.log('车', canDrop);
             break;
         case BLACK_ROLE.HORSE:
         case RED_ROLE.HORSE:
-            canDrop = isViolateHorserRule();
+            canDrop = isViolateHorserRule(chess, targetPoint, points);
             break;
         case BLACK_ROLE.ELEPHANT:
         case RED_ROLE.ELEPHANT:
-            canDrop = isViolateElephantRule();
+            canDrop = isViolateElephantRule(chess, targetPoint, points);
+            console.log('象', canDrop);
             break;
         case BLACK_ROLE.GUARD:
         case RED_ROLE.GUARD:
-            canDrop = isViolateGuardRule();
+            canDrop = isViolateGuardRule(chess, targetPoint);
             break;
         case BLACK_ROLE.MARSHAL:
         case RED_ROLE.MARSHAL:
-            canDrop = isViolateMarshalRule();
+            canDrop = isViolateMarshalRule(chess, targetPoint, points);
             break;
         default:
             break;
     }
+    console.log('最终', canDrop);
     return canDrop;
 };
 
@@ -59,17 +66,18 @@ export const canChessDrop = (chess, targetPoint, points) => {
  * @returns {Object} 起点xy，终点xy
 */
 const parsePosition = (chess, targetPoint) => {
-    const targetRow = Number(targetPoint.row);
-    const targetCol = Number(targetPoint.col);
-    const fromRow = Number(chess.fromRow);
-    const fromCol = Number(chess.fromCol);
+    const targetRow = Number(targetPoint.row - 1);
+    const targetCol = Number(targetPoint.col - 1);
+    const fromRow = Number(chess.fromRow - 1);
+    const fromCol = Number(chess.fromCol - 1);
     const rowChanges = Math.abs(targetRow - fromRow);
     const colChanges = Math.abs(targetCol - fromCol);
 
     return {
         targetRow, targetCol,
         fromRow, fromCol,
-        rowChanges, colChanges
+        rowChanges, colChanges,
+        group: chess.group
     };
 };
 
@@ -108,6 +116,10 @@ const MARSHAL_SAPCE = {
  * @param {Array} points 所有棋子信息
  * @return {Boolean} 是否可以落子
 */
+// (wsw)TODO: isSameGroup 变量抽出去
+// (wsw)TODO: 还需要盲测，从黑、红两方都下棋进行检测
+// (wsw)TODO: 需要重新验证
+// 兵、卒
 const isViolateSoliderRule = (chess, targetPoint) => {
     const { targetRow, targetCol, fromRow, fromCol } = parsePosition(chess, targetPoint);
     const isRed = chess.group === ROLE.RED;
@@ -129,13 +141,15 @@ const isViolateSoliderRule = (chess, targetPoint) => {
         );
     }
 };
-// TODO: 未验证
+// 車、车
 const isViolateVehicleRule = (chess, targetPoint, points) => {
     const {
         targetRow, targetCol,
         fromRow, fromCol,
-        rowChanges, colChanges
+        rowChanges, colChanges,
+        group
     } = parsePosition(chess, targetPoint);
+    const isSameGroup = points[targetRow][targetCol].group === group;
     let isPass = true;
 
     // 是否在同一行 && 是否在同一列
@@ -144,7 +158,6 @@ const isViolateVehicleRule = (chess, targetPoint, points) => {
         if (colChanges === 0) {
             const max = Math.max(fromRow, targetRow);
             const min = Math.min(fromRow, targetRow);
-            // (wsw)TODO: 可能在终点有问题，同时要防止棋子原地不动
             for (let _row = min + 1; _row < max; _row ++) {
                 if (points[_row][targetCol]) {
                     isPass = false;
@@ -161,38 +174,63 @@ const isViolateVehicleRule = (chess, targetPoint, points) => {
                 }   
             }
         }
+        if (isPass && isSameGroup) {
+            return false;
+        }
         return isPass;
     }
 
     return false;
 };
-// (wsw)TODO: 待验证
+// 马、馬
 const isViolateHorserRule = (chess, targetPoint, points) => {
     const {
+        targetRow, targetCol,
         fromRow, fromCol,
-        rowChanges, colChanges
+        rowChanges, colChanges,
+        group
     } = parsePosition(chess, targetPoint);
+    const isSameGroup = points[targetRow][targetCol].group === group;
+    let isPass = true;
 
     if ((rowChanges + colChanges) === 3) {
         // 找到马腿
         if (rowChanges === 2) {
-            return points[fromRow + 1][fromCol];
+            const min = Math.min(fromRow, targetRow);
+            isPass = !points[min + 1][fromCol];
         } else {
-            return points[fromRow][fromCol + 1];
+            const min = Math.min(fromCol, targetCol);
+            isPass = !points[fromRow][min + 1];
         }
+        console.log('1', isPass , isSameGroup, points[targetRow][targetCol], group, targetRow, targetCol);
+        if (isPass && isSameGroup) {
+            return false;
+        }
+        return isPass;
     }
-
     return false;
 };
-// (wsw)TODO: 待验证
+// 象、相
 const isViolateElephantRule = (chess, targetPoint, points) => {
     const {
+        targetRow, targetCol,
         fromRow, fromCol,
-        rowChanges, colChanges
+        rowChanges, colChanges,
+        group
     } = parsePosition(chess, targetPoint);
+    const isSameGroup = points[targetRow][targetCol].group === group;
+    let isPass = true;
 
-    if ((rowChanges + colChanges) === 4) {
-        return points[fromRow + 1][fromCol + 1];
+    if (rowChanges === 2 && colChanges === 2) {
+        const minRow = Math.min(fromRow, targetRow);
+        const minCol = Math.min(fromCol, targetCol);
+
+        isPass = !points[minRow + 1][minCol + 1];
+
+        if (isPass && isSameGroup) {
+            return false;
+        }
+        return isPass;
     }
 
     return false;

@@ -26,7 +26,6 @@ const CheckerPonits = connect((state) => ({
     _renderPoint = (position, point) => {
         if (!(position && point)) { return null; }
         const node = document.getElementById(position);
-        console.log('position',position)
         const { role, group } = point || {};
         if (!(role && group && node)) { return null; }
         return createPortal((
@@ -35,8 +34,8 @@ const CheckerPonits = connect((state) => ({
     }
 
     render() {
-        console.log('棋盘上的棋子11', this.props.points);
         if (!this.props.points) { return null; }
+
         return (
             <>
             {this._renderPoints()}
