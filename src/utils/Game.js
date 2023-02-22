@@ -16,7 +16,7 @@ export const canChessDrop = (chess, targetPoint, points) => {
     const {
         targetRow, targetCol,
         fromRow, fromCol,
-    } = parsePosition(chess, targetPoint);
+    } = parsePosition(chess, targetPoint, points);
     if (targetRow === fromRow && targetCol === fromCol) { return canDrop; }
 
     const { role } = chess || {};
@@ -24,7 +24,7 @@ export const canChessDrop = (chess, targetPoint, points) => {
     switch (role) {
         case BLACK_ROLE.SOLIDER:
         case RED_ROLE.SOLIDER:
-            canDrop = isViolateSoliderRule(chess, targetPoint);
+            canDrop = isViolateSoliderRule(chess, targetPoint, points);
             break;
         case BLACK_ROLE.GUN:
         case RED_ROLE.GUN:
@@ -33,7 +33,6 @@ export const canChessDrop = (chess, targetPoint, points) => {
         case BLACK_ROLE.VEHICLE:
         case RED_ROLE.VEHICLE:
             canDrop = isViolateVehicleRule(chess, targetPoint, points);
-            console.log('车', canDrop);
             break;
         case BLACK_ROLE.HORSE:
         case RED_ROLE.HORSE:
@@ -42,11 +41,10 @@ export const canChessDrop = (chess, targetPoint, points) => {
         case BLACK_ROLE.ELEPHANT:
         case RED_ROLE.ELEPHANT:
             canDrop = isViolateElephantRule(chess, targetPoint, points);
-            console.log('象', canDrop);
             break;
         case BLACK_ROLE.GUARD:
         case RED_ROLE.GUARD:
-            canDrop = isViolateGuardRule(chess, targetPoint);
+            canDrop = isViolateGuardRule(chess, targetPoint, points);
             break;
         case BLACK_ROLE.MARSHAL:
         case RED_ROLE.MARSHAL:
@@ -63,21 +61,24 @@ export const canChessDrop = (chess, targetPoint, points) => {
  * 解析棋子位置
  * @param {Object} chess 棋子信息
  * @param {Object} targetPoint 目标位置信息
+ * @param {Array(Object)} points 全局棋子信息
  * @returns {Object} 起点xy，终点xy
 */
-const parsePosition = (chess, targetPoint) => {
+const parsePosition = (chess, targetPoint, points) => {
     const targetRow = Number(targetPoint.row - 1);
     const targetCol = Number(targetPoint.col - 1);
     const fromRow = Number(chess.fromRow - 1);
     const fromCol = Number(chess.fromCol - 1);
     const rowChanges = Math.abs(targetRow - fromRow);
     const colChanges = Math.abs(targetCol - fromCol);
+    const isSameGroup = (points[targetRow][targetCol].group === chess.group) && chess.group;
 
     return {
         targetRow, targetCol,
         fromRow, fromCol,
         rowChanges, colChanges,
-        group: chess.group
+        group: chess.group,
+        isSameGroup
     };
 };
 
@@ -94,17 +95,17 @@ const isCrossBorder = (chess, row) => {
 
 // 将、士移动范围
 const MARSHAL_SAPCE = {
-    BLACK: {
-        startRow: 1,
-        endRow: 3,
-        startCol: 4,
-        endCol: 6,
+    [ROLE.BLACK]: {
+        startRow: 0,
+        endRow: 2,
+        startCol: 3,
+        endCol: 5,
     },
-    RED: {
-        startRow: 8,
-        endRow: 10,
-        startCol: 4,
-        endCol: 6,
+    [ROLE.RED]: {
+        startRow: 7,
+        endRow: 9,
+        startCol: 3,
+        endCol: 5,
     },
 };
 
@@ -119,9 +120,11 @@ const MARSHAL_SAPCE = {
 // (wsw)TODO: isSameGroup 变量抽出去
 // (wsw)TODO: 还需要盲测，从黑、红两方都下棋进行检测
 // (wsw)TODO: 需要重新验证
+// (wsw)TODO: 其它棋子移动，导致的两将对立的情况呢？
 // 兵、卒
-const isViolateSoliderRule = (chess, targetPoint) => {
-    const { targetRow, targetCol, fromRow, fromCol } = parsePosition(chess, targetPoint);
+// (wsw)TODO: 估计卒尺子的时候没判断敌我
+const isViolateSoliderRule = (chess, targetPoint, points) => {
+    const { targetRow, targetCol, fromRow, fromCol } = parsePosition(chess, targetPoint, points);
     const isRed = chess.group === ROLE.RED;
     const isCross = isCrossBorder(chess, targetRow);
 
@@ -147,9 +150,8 @@ const isViolateVehicleRule = (chess, targetPoint, points) => {
         targetRow, targetCol,
         fromRow, fromCol,
         rowChanges, colChanges,
-        group
-    } = parsePosition(chess, targetPoint);
-    const isSameGroup = points[targetRow][targetCol].group === group;
+        isSameGroup
+    } = parsePosition(chess, targetPoint, points);
     let isPass = true;
 
     // 是否在同一行 && 是否在同一列
@@ -188,9 +190,8 @@ const isViolateHorserRule = (chess, targetPoint, points) => {
         targetRow, targetCol,
         fromRow, fromCol,
         rowChanges, colChanges,
-        group
-    } = parsePosition(chess, targetPoint);
-    const isSameGroup = points[targetRow][targetCol].group === group;
+        isSameGroup
+    } = parsePosition(chess, targetPoint, points);
     let isPass = true;
 
     if ((rowChanges + colChanges) === 3) {
@@ -202,7 +203,6 @@ const isViolateHorserRule = (chess, targetPoint, points) => {
             const min = Math.min(fromCol, targetCol);
             isPass = !points[fromRow][min + 1];
         }
-        console.log('1', isPass , isSameGroup, points[targetRow][targetCol], group, targetRow, targetCol);
         if (isPass && isSameGroup) {
             return false;
         }
@@ -216,9 +216,8 @@ const isViolateElephantRule = (chess, targetPoint, points) => {
         targetRow, targetCol,
         fromRow, fromCol,
         rowChanges, colChanges,
-        group
-    } = parsePosition(chess, targetPoint);
-    const isSameGroup = points[targetRow][targetCol].group === group;
+        isSameGroup
+    } = parsePosition(chess, targetPoint, points);
     let isPass = true;
 
     if (rowChanges === 2 && colChanges === 2) {
@@ -235,79 +234,96 @@ const isViolateElephantRule = (chess, targetPoint, points) => {
 
     return false;
 };
-// (wsw)TODO: 待验证
-const isViolateGuardRule = (chess, targetPoint) => {
+// 士、仕
+const isViolateGuardRule = (chess, targetPoint, points) => {
     const {
         targetRow, targetCol,
-        rowChanges, colChanges
-    } = parsePosition(chess, targetPoint);
-    const role = chess.role;
+        rowChanges, colChanges,
+        isSameGroup, group
+    } = parsePosition(chess, targetPoint, points);
+    let isPass = true;
 
     // 需要限定移动范围
-    if (rowChanges === 1) {
-        return (
-            MARSHAL_SAPCE[role].startRow <= targetRow
-            && MARSHAL_SAPCE[role].endRow >= targetRow
+    if (rowChanges === 1 && colChanges === 1) {
+        isPass = (
+            (
+                MARSHAL_SAPCE[group].startCol <= targetCol
+                && MARSHAL_SAPCE[group].endCol >= targetCol
+            ) && (
+                MARSHAL_SAPCE[group].startRow <= targetRow
+                && MARSHAL_SAPCE[group].endRow >= targetRow
+            )
+        );
+    } else if (rowChanges === 1) {
+        isPass = (
+            MARSHAL_SAPCE[group].startRow <= targetRow
+            && MARSHAL_SAPCE[group].endRow >= targetRow
         );
     } else if (colChanges === 1) {
-        return (
-            MARSHAL_SAPCE[role].startCol <= targetCol
-            && MARSHAL_SAPCE[role].endCol >= targetCol
-        );
-    } else if (rowChanges === 1 && colChanges === 1) {
-        return (
-            (
-                MARSHAL_SAPCE[role].startCol <= targetCol
-                && MARSHAL_SAPCE[role].endCol >= targetCol
-            ) && (
-                MARSHAL_SAPCE[role].startRow <= targetRow
-                && MARSHAL_SAPCE[role].endRow >= targetRow
-            )
+        isPass = (
+            MARSHAL_SAPCE[group].startCol <= targetCol
+            && MARSHAL_SAPCE[group].endCol >= targetCol
         );
     }
 
-    return false;
+    if (isPass && isSameGroup) {
+        return false;
+    }
+
+    return isPass;
 };
-// (wsw)TODO: 待验证
-// (wsw)TODO: 其它棋子移动，导致的两将对立的情况呢？
+// 将、帅
 const isViolateMarshalRule = (chess, targetPoint, points) => {
     const {
         targetRow, targetCol,
-        rowChanges, colChanges
-    } = parsePosition(chess, targetPoint);
-    const role = chess.role;
-    let isPass = false;
+        rowChanges, colChanges,
+        isSameGroup, group
+    } = parsePosition(chess, targetPoint, points);
+    let isPass = true;
 
     // 需要限定移动范围
     if ((rowChanges + colChanges) === 1) {
         if (
             (
-                MARSHAL_SAPCE[role].startRow <= targetRow
-                && MARSHAL_SAPCE[role].endRow >= targetRow
+                MARSHAL_SAPCE[group].startRow <= targetRow
+                && MARSHAL_SAPCE[group].endRow >= targetRow
             ) && (
-                MARSHAL_SAPCE[role].startCol <= targetCol
-                && MARSHAL_SAPCE[role].endCol >= targetCol
+                MARSHAL_SAPCE[group].startCol <= targetCol
+                && MARSHAL_SAPCE[group].endCol >= targetCol
             )
         ) {
-            for (let _row = 2; _row < 9; _row ++) {
-                if (points[_row][targetCol]) {
-                    isPass = true;
-                    break;
+            if (group === ROLE.BLACK) {
+                for (let _row = targetRow; _row <= 9; _row ++) {
+                    if (points[_row][targetCol]) {
+                        isPass = points[_row][targetCol].role !== RED_ROLE.MARSHAL;
+                        break;
+                    }
+                }
+            } else {
+                for (let _row = targetRow; _row >= 0; _row --) {
+                    if (points[_row][targetCol]) {
+                        isPass = points[_row][targetCol].role !== BLACK_ROLE.MARSHAL;
+                        break;
+                    }
                 }
             }
+        }
+        if (isPass && isSameGroup) {
+            return false;
         }
         return isPass;
     }
 
     return false;
 };
-// (wsw)TODO: 待验证
+// 炮、砲
 const isViolateGunRule = (chess, targetPoint, points) => {
     const {
         targetRow, targetCol,
         fromRow, fromCol,
-        rowChanges, colChanges
-    } = parsePosition(chess, targetPoint);
+        rowChanges, colChanges,
+        isSameGroup
+    } = parsePosition(chess, targetPoint, points);
     let _num = 0;
 
     if (rowChanges === 0 || colChanges === 0) {
@@ -329,7 +345,13 @@ const isViolateGunRule = (chess, targetPoint, points) => {
                 }   
             }
         }
-        return _num === 1;
+        // 隔子打子
+        if (_num === 1 && points[targetRow][targetCol] && !isSameGroup) {
+            return true;
+        }
+        if (_num === 0 && !points[targetRow][targetCol]) {
+            return true;
+        }
     }
 
     return false;
