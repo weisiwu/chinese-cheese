@@ -53,7 +53,6 @@ export const canChessDrop = (chess, targetPoint, points) => {
         default:
             break;
     }
-    console.log('最终', canDrop);
     return canDrop;
 };
 
@@ -90,7 +89,7 @@ const parsePosition = (chess, targetPoint, points) => {
 */
 const isCrossBorder = (chess, row) => {
     const { group } = chess || {};
-    return group === ROLE.RED ? row < 6 : row >= 6;
+    return group === ROLE.RED ? row <= 5 : row >= 6;
 }
 
 // 将、士移动范围
@@ -122,27 +121,39 @@ const MARSHAL_SAPCE = {
 // (wsw)TODO: 需要重新验证
 // (wsw)TODO: 其它棋子移动，导致的两将对立的情况呢？
 // 兵、卒
-// (wsw)TODO: 估计卒尺子的时候没判断敌我
 const isViolateSoliderRule = (chess, targetPoint, points) => {
-    const { targetRow, targetCol, fromRow, fromCol } = parsePosition(chess, targetPoint, points);
+    const {
+        targetRow, targetCol,
+        fromRow, fromCol,
+        rowChanges, colChanges,
+        isSameGroup
+    } = parsePosition(chess, targetPoint, points);
     const isRed = chess.group === ROLE.RED;
-    const isCross = isCrossBorder(chess, targetRow);
+    const isCross = isCrossBorder(chess, fromRow + 1);
+    let isPass = true;
 
     if (isCross) {
-        return (
-            Math.abs(fromCol - targetCol) + (Math.abs(fromRow - targetRow)) === 1
+        isPass = (
+            (colChanges + rowChanges) === 1
             && (isRed ? targetRow <= fromRow : targetRow >= fromRow)
         );
-    }
-    if (isRed) {
-        return (
-            targetRow === fromRow - 1 && targetCol === fromCol
-        );
     } else {
-        return (
-            targetRow === fromRow + 1 && targetCol === fromCol
-        );
+        if (isRed) {
+            isPass = (
+                targetRow === fromRow - 1 && colChanges === 0
+            );
+        } else {
+            isPass = (
+                targetRow === fromRow + 1 && colChanges === 0
+            );
+        }
     }
+
+    if (isPass && isSameGroup) {
+        return false;
+    }
+
+    return isPass;
 };
 // 車、车
 const isViolateVehicleRule = (chess, targetPoint, points) => {

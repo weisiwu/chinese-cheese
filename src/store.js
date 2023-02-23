@@ -24,7 +24,6 @@ const pointors = createSlice({
                     points[_targetRow][_targetCol] = { role, group };
                     // 删除已有之前棋子。
                     points[_fromRow][_fromCol] = '';
-                    console.log('delete', _fromRow, _fromCol, points[_fromRow][_fromCol]);
                 }
             }
             return points;

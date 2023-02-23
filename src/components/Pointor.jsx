@@ -18,8 +18,6 @@ const Pointor = connect((state) => ({
             accept: ItemTypes.CARD,
             canDrop: (moveChess) => {
                 // 先设置为所有的点都能落子
-                // TODO: 缺号参数 points
-                console.log('canDrop', points)
                 return canChessDrop(moveChess, { row, col }, points);
             },
             // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
