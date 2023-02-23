@@ -1,7 +1,48 @@
 /**
  * 游戏逻4辑
 */
-import { BLACK_ROLE, RED_ROLE, ROLE } from './constants.js';
+import { BLACK_ROLE, RED_ROLE, ROLE, WINNER } from './constants.js';
+
+/**
+ * 在象棋游戏对局中，有部分数据是最终要显示的，如棋子位置、棋盘等
+ * 有些数据不需要显示，它们更像是一种规则，将他们放在store中就不合适
+ * 它们和视图无关，但是又横亘游戏全局，比如：当前行动方、第几轮、对局记录等
+*/
+export class Game {
+    constructor({ role = ROLE.BLACK } = {}) {
+        this.round = 0;
+        this.groupInAction = role; // 默认黑子先
+        this.roundCache = [];
+        this.startTime = 0;
+        this.result = WINNER.NOT_FINISH; // 进行中
+        this.groupTurn = {
+            [ROLE.BLACK]: ROLE.RED,
+            [ROLE.RED]: ROLE.BLACK,
+        };
+    }
+
+    roundChange = (points) => {
+        // (wsw)TODO: 补充棋谱缓存
+        // this.roundCache.push();
+        this.round ++;
+        this.judgeFinish(points);
+
+        if (this.result === WINNER.NOT_FINISH) {
+            this.groupInAction = this.groupTurn[this.groupInAction];
+        } else if (this.result === WINNER.TIE) {
+            // (wsw)TODO: 平局提示
+        } else {
+            // (wsw)TODO: 结束提示
+        }
+    };
+
+    judgeFinish = (points) => {
+        this.result = WINNER.NOT_FINISH;
+    }
+};
+
+const _game = new Game();
+export default _game;
 
 /**8 * 棋子是否可以落子
  10 @param chess 棋子信息
@@ -11,6 +52,8 @@ import { BLACK_ROLE, RED_ROLE, ROLE } from './constants.js';
  * @returns Boolean 是否可以落子
 */
 export const canChessDrop = (chess, targetPoint, points) => {
+    // 不是行动方不可移动
+    if (_game.groupInAction !== chess.group) { return false; }
     let canDrop = false;
     if (!(targetPoint && chess && points.length)) { return canDrop; }
     const {
