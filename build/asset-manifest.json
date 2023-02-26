@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/chinese-cheese/build/static/css/main.0c12fdb1.chunk.css",
+    "main.css": "/chinese-cheese/build/static/css/main.3d3c9668.chunk.css",
     "main.js": "/chinese-cheese/build/static/js/main.d825bf1b.chunk.js",
     "main.js.map": "/chinese-cheese/build/static/js/main.d825bf1b.chunk.js.map",
     "runtime-main.js": "/chinese-cheese/build/static/js/runtime-main.163f87bd.js",
@@ -8,9 +8,9 @@
     "static/js/2.f75dd8f3.chunk.js": "/chinese-cheese/build/static/js/2.f75dd8f3.chunk.js",
     "static/js/2.f75dd8f3.chunk.js.map": "/chinese-cheese/build/static/js/2.f75dd8f3.chunk.js.map",
     "index.html": "/chinese-cheese/build/index.html",
-    "precache-manifest.a2eced34478db0da38dda35bce9e4553.js": "/chinese-cheese/build/precache-manifest.a2eced34478db0da38dda35bce9e4553.js",
+    "precache-manifest.1c6cb2fff029a57fc71972f532e2d8aa.js": "/chinese-cheese/build/precache-manifest.1c6cb2fff029a57fc71972f532e2d8aa.js",
     "service-worker.js": "/chinese-cheese/build/service-worker.js",
-    "static/css/main.0c12fdb1.chunk.css.map": "/chinese-cheese/build/static/css/main.0c12fdb1.chunk.css.map",
+    "static/css/main.3d3c9668.chunk.css.map": "/chinese-cheese/build/static/css/main.3d3c9668.chunk.css.map",
     "static/js/2.f75dd8f3.chunk.js.LICENSE.txt": "/chinese-cheese/build/static/js/2.f75dd8f3.chunk.js.LICENSE.txt",
     "static/media/dashboard.less": "/chinese-cheese/build/static/media/cheese.1ee9941f.ttf",
     "static/media/仕_red.png": "/chinese-cheese/build/static/media/仕_red.153eb7ea.png",
@@ -31,7 +31,7 @@
   "entrypoints": [
     "static/js/runtime-main.163f87bd.js",
     "static/js/2.f75dd8f3.chunk.js",
-    "static/css/main.0c12fdb1.chunk.css",
+    "static/css/main.3d3c9668.chunk.css",
     "static/js/main.d825bf1b.chunk.js"
   ]
 }

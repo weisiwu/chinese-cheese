@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "79abcbb85def4de1517f6083937fe800",
+    "revision": "2506f079716d57cc74dfe9f43bf145ff",
     "url": "/chinese-cheese/build/index.html"
   },
   {
-    "revision": "0f02d529bda816ecf4d9",
-    "url": "/chinese-cheese/build/static/css/main.0c12fdb1.chunk.css"
+    "revision": "16eed8b249958612903c",
+    "url": "/chinese-cheese/build/static/css/main.3d3c9668.chunk.css"
   },
   {
     "revision": "2d39f49945e3d19d0b2f",
@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/chinese-cheese/build/static/js/2.f75dd8f3.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "0f02d529bda816ecf4d9",
+    "revision": "16eed8b249958612903c",
     "url": "/chinese-cheese/build/static/js/main.d825bf1b.chunk.js"
   },
   {
