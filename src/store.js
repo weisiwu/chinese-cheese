@@ -37,26 +37,12 @@ const pointors = createSlice({
     }
 });
 
-// 游戏时间
-// const gameTimer = createSlice({
-//     name: 'gameTimer',
-//     initialState: 0,
-//     reducers: {
-//         updateTimer: (gameTimer) => {
-//             return gameTimer + 1000;
-//         },
-//         resetTimer: () => 0,
-//     },
-// });
-
 export const Actions = {
     ...pointors.actions,
-    // ...gameTimer.actions,
 };
 
 export default configureStore({
     reducer: {
         pointors: pointors.reducer,
-        // gameTimer: gameTimer.reducer,
     },
 });

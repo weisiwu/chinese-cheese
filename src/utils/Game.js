@@ -22,8 +22,15 @@ export class Game {
             [ROLE.BLACK]: ROLE.RED,
             [ROLE.RED]: ROLE.BLACK,
         };
-        this.pointsSnap = [];
+        this.gameFinishCbs = [];
     }
+
+    applyTie = () => {
+        if (this.result === WINNER.NOT_FINISH) {
+            this.result = WINNER.TIE;
+            this.roundChange();
+        }
+    };
 
     timerInterval = () => {
         this.timer = setInterval(() => {
@@ -51,10 +58,12 @@ export class Game {
 
         if (this.result === WINNER.NOT_FINISH) {
             this.groupInAction = this.groupTurn[this.groupInAction];
-        } else if (this.result === WINNER.TIE) {
-            // (wsw)TODO: 平局提示
         } else {
-            // (wsw)TODO: 结束提示
+            clearInterval(this.timer);
+            // 平局、结束提示
+            this.gameFinishCbs.forEach((cb) => {
+                if (typeof cb === 'function') { cb(this.result); }
+            });
         }
 
         this.roundChangeCbs.forEach((cb) => {
@@ -89,10 +98,14 @@ export class Game {
 
         if (isFinish) {
             // 轮到一方行动，该方无将棋，判负
-            this.result = isRed ? WINNER.BLACK : WINNER.RED;
+            this.result = isRed ? WINNER.RED : WINNER.BLACK;
         } else {
             this.result = WINNER.NOT_FINISH;
         }
+    };
+
+    addGameFinishCb = (cb) => {
+        this.gameFinishCbs.push(cb || (() => {}));
     };
 };
 
@@ -214,6 +227,7 @@ const MARSHAL_SAPCE = {
  * @param {Array} points 所有棋子信息
  * @return {Boolean} 是否可以落子
 */
+// (wsw)TODO: 添加失败停止，和棋局导出（会多处这么一个按钮）。
 // (wsw)TODO: 其它棋子移动，导致的两将对立的情况呢？
 // 兵、卒
 const isViolateSoliderRule = (chess, targetPoint, points) => {

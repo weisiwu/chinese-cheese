@@ -22,6 +22,10 @@ const DashBoard = connect((state) => ({
         return moment(time).utcOffset(0).format('HH:mm:ss');
     }
 
+    _applyTie() {
+        game.applyTie();
+    }
+
     componentDidMount() {
         game.addTimerCb(() => {
             this.setState({ gameTimer: game.gameTimer });
@@ -40,7 +44,10 @@ const DashBoard = connect((state) => ({
                 <div id='Dashboard'>
                     <p className="dashboard_text">{`用时: ${this._timeFormat(gameTimer) || '00:00:00'}`}</p>
                     <p className="dashboard_text">{byTurn}</p>
-                    <p className="dashboard_btn">求和</p>
+                    <div className="dashboard_btns">
+                        <p className="dashboard_btn" onClick={this._applyTie}>求和</p>
+                        <p className="dashboard_btn">导出棋谱</p>
+                    </div>
                 </div>
             ), document.body)
        );

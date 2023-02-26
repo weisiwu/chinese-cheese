@@ -1,5 +1,5 @@
 @import url(./base.less);
-@DashWidth: 280px;
+@DashWidth: 320px;
 @DashHeight: 200px;
 
 #Dashboard {
@@ -23,7 +23,12 @@
     margin: 0px;
     font-family: cheese;
 }
+.dashboard_btns {
+    display: inline-block;
+    width: (@DashWidth - 50px);
+}
 .dashboard_btn {
+    float: left;
     font-size: 28px;
     text-align: center;
     border: 1px solid #916722;
@@ -34,11 +39,15 @@
     display: inline-block;
     width: 120px;
     height: 40px;
-    margin: 15px ((@DashWidth - 120px - 50px) / 2);
+    margin: 15px 30px 15px 0px;
     cursor: pointer;
     font-weight: bold;
     user-select: none;
+    box-sizing: border-box;
 }
 .dashboard_btn:hover {
     color: rgba(0, 0, 0, 0.4);
+}
+.dashboard_btn:last-child {
+    margin-right: 0px;
 }
