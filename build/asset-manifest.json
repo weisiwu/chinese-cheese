@@ -1,23 +1,37 @@
 {
   "files": {
-    "main.css": "/chinese-cheese/build/static/css/main.69881425.chunk.css",
-    "main.js": "/chinese-cheese/build/static/js/main.fc68c072.chunk.js",
-    "main.js.map": "/chinese-cheese/build/static/js/main.fc68c072.chunk.js.map",
+    "main.css": "/chinese-cheese/build/static/css/main.3dfbbfaf.chunk.css",
+    "main.js": "/chinese-cheese/build/static/js/main.edffcf79.chunk.js",
+    "main.js.map": "/chinese-cheese/build/static/js/main.edffcf79.chunk.js.map",
     "runtime-main.js": "/chinese-cheese/build/static/js/runtime-main.163f87bd.js",
     "runtime-main.js.map": "/chinese-cheese/build/static/js/runtime-main.163f87bd.js.map",
-    "static/js/2.6d858a07.chunk.js": "/chinese-cheese/build/static/js/2.6d858a07.chunk.js",
-    "static/js/2.6d858a07.chunk.js.map": "/chinese-cheese/build/static/js/2.6d858a07.chunk.js.map",
+    "static/js/2.a190753e.chunk.js": "/chinese-cheese/build/static/js/2.a190753e.chunk.js",
+    "static/js/2.a190753e.chunk.js.map": "/chinese-cheese/build/static/js/2.a190753e.chunk.js.map",
     "index.html": "/chinese-cheese/build/index.html",
-    "precache-manifest.819368ae7e06c10676070ed88ce17f79.js": "/chinese-cheese/build/precache-manifest.819368ae7e06c10676070ed88ce17f79.js",
+    "precache-manifest.f5d6a7a746ee10a1b3b9243dbaf421a4.js": "/chinese-cheese/build/precache-manifest.f5d6a7a746ee10a1b3b9243dbaf421a4.js",
     "service-worker.js": "/chinese-cheese/build/service-worker.js",
-    "static/css/main.69881425.chunk.css.map": "/chinese-cheese/build/static/css/main.69881425.chunk.css.map",
-    "static/js/2.6d858a07.chunk.js.LICENSE.txt": "/chinese-cheese/build/static/js/2.6d858a07.chunk.js.LICENSE.txt",
-    "static/media/chessman.less": "/chinese-cheese/build/static/media/cheese.1ee9941f.ttf"
+    "static/css/main.3dfbbfaf.chunk.css.map": "/chinese-cheese/build/static/css/main.3dfbbfaf.chunk.css.map",
+    "static/js/2.a190753e.chunk.js.LICENSE.txt": "/chinese-cheese/build/static/js/2.a190753e.chunk.js.LICENSE.txt",
+    "static/media/chessman.less": "/chinese-cheese/build/static/media/cheese.1ee9941f.ttf",
+    "static/media/仕_red.png": "/chinese-cheese/build/static/media/仕_red.153eb7ea.png",
+    "static/media/兵_red.png": "/chinese-cheese/build/static/media/兵_red.fe5a6e46.png",
+    "static/media/卒_black.png": "/chinese-cheese/build/static/media/卒_black.a45bd480.png",
+    "static/media/士_black.png": "/chinese-cheese/build/static/media/士_black.1c5324f3.png",
+    "static/media/将_black.png": "/chinese-cheese/build/static/media/将_black.349ed535.png",
+    "static/media/帅_red.png": "/chinese-cheese/build/static/media/帅_red.13afce9f.png",
+    "static/media/炮_black.png": "/chinese-cheese/build/static/media/炮_black.6ef291b4.png",
+    "static/media/相_red.png": "/chinese-cheese/build/static/media/相_red.ed8d9e85.png",
+    "static/media/砲_red.png": "/chinese-cheese/build/static/media/砲_red.1abdb6d5.png",
+    "static/media/象_black.png": "/chinese-cheese/build/static/media/象_black.f959bf29.png",
+    "static/media/車_black.png": "/chinese-cheese/build/static/media/車_black.808be253.png",
+    "static/media/車_red.png": "/chinese-cheese/build/static/media/車_red.9bf2dba6.png",
+    "static/media/馬_black.png": "/chinese-cheese/build/static/media/馬_black.668d40a6.png",
+    "static/media/馬_red.png": "/chinese-cheese/build/static/media/馬_red.31b9c336.png"
   },
   "entrypoints": [
     "static/js/runtime-main.163f87bd.js",
-    "static/js/2.6d858a07.chunk.js",
-    "static/css/main.69881425.chunk.css",
-    "static/js/main.fc68c072.chunk.js"
+    "static/js/2.a190753e.chunk.js",
+    "static/css/main.3dfbbfaf.chunk.css",
+    "static/js/main.edffcf79.chunk.js"
   ]
 }
