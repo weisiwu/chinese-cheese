@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "82f1b358e0e1b8c82028333ab59c2edf",
+    "revision": "79abcbb85def4de1517f6083937fe800",
     "url": "/chinese-cheese/build/index.html"
   },
   {
-    "revision": "94c5760e52a97189de56",
-    "url": "/chinese-cheese/build/static/css/main.2b1d0ab0.chunk.css"
+    "revision": "0f02d529bda816ecf4d9",
+    "url": "/chinese-cheese/build/static/css/main.0c12fdb1.chunk.css"
   },
   {
-    "revision": "f327a1595fed6f46d898",
-    "url": "/chinese-cheese/build/static/js/2.0741169e.chunk.js"
+    "revision": "2d39f49945e3d19d0b2f",
+    "url": "/chinese-cheese/build/static/js/2.f75dd8f3.chunk.js"
   },
   {
-    "revision": "04b3f2d81000f2825017ab8a028ab938",
-    "url": "/chinese-cheese/build/static/js/2.0741169e.chunk.js.LICENSE.txt"
+    "revision": "66fb9a9e2d005547563dfc4113cac39f",
+    "url": "/chinese-cheese/build/static/js/2.f75dd8f3.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "94c5760e52a97189de56",
-    "url": "/chinese-cheese/build/static/js/main.2e146d02.chunk.js"
+    "revision": "0f02d529bda816ecf4d9",
+    "url": "/chinese-cheese/build/static/js/main.d825bf1b.chunk.js"
   },
   {
     "revision": "cd123e0a36f3f5ad04ed",
