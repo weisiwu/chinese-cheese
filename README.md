@@ -17,3 +17,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 2、 用户可以选择本地模式和联机模式  
 3、 本地模式自己和自己下棋  
 4、 联机模式，自己和别人通过局域网下棋  
+
+## Notice  
+1、 build里为打包产物  
