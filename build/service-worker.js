@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/chinese-cheese/build/precache-manifest.f5d6a7a746ee10a1b3b9243dbaf421a4.js"
+  "/chinese-cheese/build/precache-manifest.bc41db61331a911bbc8370272b791cf1.js"
 );
 
 self.addEventListener('message', (event) => {
