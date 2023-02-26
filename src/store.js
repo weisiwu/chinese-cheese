@@ -28,7 +28,7 @@ const pointors = createSlice({
                 }
             }
             // 进入下一轮
-            game.roundChange();
+            game.roundChange(points);
             return points;
         },
         resetPointors: () => {

@@ -16,15 +16,10 @@ const Pointor = connect((state) => ({
         () => ({
             accept: ItemTypes.CARD,
             canDrop: (moveChess) => {
-                // 先设置为所有的点都能落子
                 return canChessDrop(moveChess, { row, col }, points);
             },
             // drop事件发生的时候，重新渲染棋盘，并且执行一堆操作。
-            // 调用 Game.js
             drop: (moveChess) => {
-                // 看看其他demo是不是drop的时候直接render
-                // hover的棋子要变色
-                // 可以走通，但是要修改整个元数据
                 const { group, role, fromRow, fromCol } = moveChess || {};
                 move({ group, role }, { row: fromRow, col: fromCol });
             },

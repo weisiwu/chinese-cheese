@@ -6,6 +6,7 @@ import React, { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Pointor } from './Pointor.jsx';
 import { Actions } from '../store.js'
+import game from '../utils/Game'
 import '../styles/checkerboard.less';
 
 // 棋盘关键纹理位置(行_列)
@@ -66,13 +67,14 @@ const Checkerboard = connect((state) => ({
         if (isDivider) { extCls += ' hide-border'; }
         const _move = useCallback((targetRow, targetCol) => {
             return ({ group, role }, { row: fromRow, col: fromCol }) => {
+                game.judgeFinish(points, { targetRow: targetRow - 1, targetCol: targetCol - 1 });
                 move({
                     chess: { group, role, fromRow, fromCol },
                     targetRow,
                     targetCol,
                 });
             };
-        }, [col, row]);
+        }, [col, row, points]);
 
         if (row === 5) {
             return (

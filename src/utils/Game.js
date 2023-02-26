@@ -29,7 +29,6 @@ export class Game {
         // (wsw)TODO: 补充棋谱缓存
         // this.roundCache.push();
         this.round ++;
-        this.judgeFinish(points);
 
         if (this.result === WINNER.NOT_FINISH) {
             this.groupInAction = this.groupTurn[this.groupInAction];
@@ -44,8 +43,29 @@ export class Game {
      * @param {object} points 对局所有的棋子
      * @return {enum} 对局状况
     */
-    judgeFinish = (points) => {
-        this.result = WINNER.NOT_FINISH;
+    judgeFinish = (points, { targetRow, targetCol, willToTie = false } = {}) => {
+        if (willToTie) {
+            this.result = WINNER.TIE; // 求和
+            return;
+        }
+
+        const isRed = this.groupInAction === ROLE.RED;
+        const _ROLE = isRed ? BLACK_ROLE : RED_ROLE;
+        let isFinish = false;
+
+        // 判断是否有本轮行动方的将棋是否还在
+        if (points[targetRow][targetCol]) {
+            if (points[targetRow][targetCol].role === _ROLE.MARSHAL) {
+                isFinish = true;
+            }
+        }
+
+        if (isFinish) {
+            // 轮到一方行动，该方无将棋，判负
+            this.result = isRed ? WINNER.BLACK : WINNER.RED;
+        } else {
+            this.result = WINNER.NOT_FINISH;
+        }
     };
 };
 
