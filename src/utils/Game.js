@@ -19,8 +19,12 @@ export class Game {
             [ROLE.BLACK]: ROLE.RED,
             [ROLE.RED]: ROLE.BLACK,
         };
+        this.pointsSnap = [];
     }
 
+    /**
+     * @param {object} points 对局所有的棋子
+    */
     roundChange = (points) => {
         // (wsw)TODO: 补充棋谱缓存
         // this.roundCache.push();
@@ -36,9 +40,13 @@ export class Game {
         }
     };
 
+    /**
+     * @param {object} points 对局所有的棋子
+     * @return {enum} 对局状况
+    */
     judgeFinish = (points) => {
         this.result = WINNER.NOT_FINISH;
-    }
+    };
 };
 
 const _game = new Game();
@@ -159,9 +167,6 @@ const MARSHAL_SAPCE = {
  * @param {Array} points 所有棋子信息
  * @return {Boolean} 是否可以落子
 */
-// (wsw)TODO: isSameGroup 变量抽出去
-// (wsw)TODO: 还需要盲测，从黑、红两方都下棋进行检测
-// (wsw)TODO: 需要重新验证
 // (wsw)TODO: 其它棋子移动，导致的两将对立的情况呢？
 // 兵、卒
 const isViolateSoliderRule = (chess, targetPoint, points) => {

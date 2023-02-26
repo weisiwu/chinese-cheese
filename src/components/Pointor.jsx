@@ -12,7 +12,6 @@ import '../styles/pointor.less';
 const Pointor = connect((state) => ({
     points: state.pointors
 }))(({ className, row, col, move, points }) => {
-    // TODO: 是否需要缓存，每个pointer 都被渲染了。
     const [{ _ }, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,

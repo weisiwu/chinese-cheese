@@ -74,7 +74,6 @@ const Checkerboard = connect((state) => ({
             };
         }, [col, row]);
 
-        // TODO: 在每个grid里面都加上 drop ref，然后扩大区域(隐形)，做到棋子随意移动
         if (row === 5) {
             return (
                 <div key={id} className={`grid ${extCls}`}>

@@ -1,0 +1,1 @@
+// (wsw)TODO: 补充一个可以快速根据 constant.js/BLACK_ROLE | RED_ROLE 生成棋子截图的工具
