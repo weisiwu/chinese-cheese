@@ -11,9 +11,12 @@ import { BLACK_ROLE, RED_ROLE, ROLE, WINNER } from './constants.js';
 export class Game {
     constructor({ role = ROLE.BLACK } = {}) {
         this.round = 0;
+        this.roundChangeCbs = [];
         this.groupInAction = role; // 默认黑子先
         this.roundCache = [];
-        this.startTime = 0;
+        this.timer = null;
+        this.gameTimer = 0;
+        this.timerCbs = []; // 每秒钟的回调函数
         this.result = WINNER.NOT_FINISH; // 进行中
         this.groupTurn = {
             [ROLE.BLACK]: ROLE.RED,
@@ -22,6 +25,19 @@ export class Game {
         this.pointsSnap = [];
     }
 
+    timerInterval = () => {
+        this.timer = setInterval(() => {
+            this.gameTimer += 1000;
+            this.timerCbs.forEach((cb) => {
+                if (typeof cb === 'function') { cb(); }
+            });
+        }, 1000);
+    };
+
+    addTimerCb = (cb) => {
+        this.timerCbs.push(cb || (() => {}));
+    };
+
     /**
      * @param {object} points 对局所有的棋子
     */
@@ -29,6 +45,9 @@ export class Game {
         // (wsw)TODO: 补充棋谱缓存
         // this.roundCache.push();
         this.round ++;
+        if (this.round === 1) {
+            this.timerInterval();
+        }
 
         if (this.result === WINNER.NOT_FINISH) {
             this.groupInAction = this.groupTurn[this.groupInAction];
@@ -37,6 +56,14 @@ export class Game {
         } else {
             // (wsw)TODO: 结束提示
         }
+
+        this.roundChangeCbs.forEach((cb) => {
+            if (typeof cb === 'function') { cb(); }
+        });
+    };
+
+    addRoundChangeCb = (cb) => {
+        this.roundChangeCbs.push(cb || (() => {}));
     };
 
     /**

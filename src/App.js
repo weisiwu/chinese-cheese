@@ -4,6 +4,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Checkerboard from './components/Checkerboard.jsx';
 import CheckerPonits from './components/CheckerPonits.jsx';
+import DashBoard from './components/DashBoard.jsx';
 import store from './store.js'
 
 // (wsw)TODO: 整体转换为TS
@@ -20,6 +21,7 @@ class App extends React.Component {
                     <DndProvider backend={HTML5Backend}>
                         <Checkerboard />
                         <CheckerPonits />
+                        <DashBoard />
                     </DndProvider>
                 </Provider>
             </>

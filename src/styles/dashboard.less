@@ -1,0 +1,44 @@
+@import url(./base.less);
+@DashWidth: 280px;
+@DashHeight: 200px;
+
+#Dashboard {
+    position: absolute;
+    z-index: 9999;
+    width: @DashWidth;
+    height: @DashHeight;
+    top: 50%;
+    margin-top: (-@DashHeight / 2);
+    left: 50%;
+    margin-left: (-@DashWidth / 2 - 450px - @DashWidth / 2 - 30px);
+    background-color: #e0be88;
+    border-radius: 30px;
+    padding: 30px 25px 40px;
+    box-sizing: border-box;
+}
+.dashboard_text {
+    font-size: 28px;
+    text-align: center;
+    line-height: 40px;
+    margin: 0px;
+    font-family: cheese;
+}
+.dashboard_btn {
+    font-size: 28px;
+    text-align: center;
+    border: 1px solid #916722;
+    border-radius: 5px;
+    line-height: 40px;
+    margin: 0px;
+    font-family: cheese;
+    display: inline-block;
+    width: 120px;
+    height: 40px;
+    margin: 15px ((@DashWidth - 120px - 50px) / 2);
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+}
+.dashboard_btn:hover {
+    color: rgba(0, 0, 0, 0.4);
+}
